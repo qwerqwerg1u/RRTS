@@ -45,6 +45,9 @@ local Window = Rayfield:CreateWindow({
         FileName = "Config"
     }
 })
+local PlTab = Window:CreateTab("플레이어설정")
+local ANTab = Window:CreateTab("잡기능")
+local bdTab = Window:CreateTab("배경")
 
 bdTab:AddButton({
     Name = "기본값",
@@ -2656,4 +2659,325 @@ bdTab:CreateButton({
         cc.Saturation = 0.32
         cc.TintColor = Color3.fromRGB(245, 245, 255)
     end
+})
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local VirtualUser = game:GetService("VirtualUser")
+
+local LocalPlayer = Players.LocalPlayer
+
+local walkSpeedVal = 16
+local jumpPowerVal = 50
+local infJumpEnabled = false
+local noclipEnabled = false
+
+local defaultWalkSpeed = 16
+local defaultJumpPower = 50
+
+task.spawn(function()
+    local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local hum = char:WaitForChild("Humanoid", 5)
+    if hum then
+        defaultWalkSpeed = hum.WalkSpeed
+        defaultJumpPower = hum.JumpPower
+    end
+end)
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    local hum = char:WaitForChild("Humanoid", 5)
+    if hum then
+        defaultWalkSpeed = hum.WalkSpeed
+        defaultJumpPower = hum.JumpPower
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if infJumpEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if LocalPlayer.Character then
+        local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        
+        if hum then
+            hum.WalkSpeed = walkSpeedVal
+            hum.UseJumpPower = true
+            hum.JumpPower = jumpPowerVal
+            
+            if hrp then
+                local moveDir = hum.MoveDirection
+                if moveDir.Magnitude > 0 then
+                    local targetVel = moveDir * walkSpeedVal
+                    hrp.AssemblyLinearVelocity = Vector3.new(targetVel.X, hrp.AssemblyLinearVelocity.Y, targetVel.Z)
+                else
+                    hrp.AssemblyLinearVelocity = Vector3.new(0, hrp.AssemblyLinearVelocity.Y, 0)
+                end
+                
+                if hum:GetState() == Enum.HumanoidStateType.Jumping or hum:GetState() == Enum.HumanoidStateType.Freefall then
+                    if moveDir.Magnitude == 0 then
+                        hrp.AssemblyLinearVelocity = Vector3.new(0, hrp.AssemblyLinearVelocity.Y, 0)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+RunService.Stepped:Connect(function()
+    if noclipEnabled and LocalPlayer.Character then
+        for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end)
+
+PlTab:CreateSlider({
+    Name = "걷기속도",
+    Range = {16, 500},
+    Increment = 1,
+    Suffix = "Speed",
+    CurrentValue = 16,
+    Flag = "WalkSpeedSlider",
+    Callback = function(Value)
+        walkSpeedVal = Value
+    end,
+})
+
+PlTab:CreateSlider({
+    Name = "점프파워",
+    Range = {50, 500},
+    Increment = 1,
+    Suffix = "Height",
+    CurrentValue = 50,
+    Flag = "JumpPowerSlider",
+    Callback = function(Value)
+        jumpPowerVal = Value
+    end,
+})
+
+PlTab:CreateToggle({
+    Name = "무한점프",
+    CurrentValue = false,
+    Flag = "InfJumpToggle",
+    Callback = function(Value)
+        infJumpEnabled = Value
+    end,
+})
+
+PlTab:CreateToggle({
+    Name = "노클립",
+    CurrentValue = false,
+    Flag = "NoclipToggle",
+    Callback = function(Value)
+        noclipEnabled = Value
+    end,
+})
+
+local antiAfkConn = nil
+local antiAfkEnabled = false
+
+ANTab:CreateToggle({
+    Name = "안티 AFK",
+    CurrentValue = false,
+    Flag = "AntiAFKToggle",
+    Callback = function(Value)
+        antiAfkEnabled = Value
+        if antiAfkEnabled then
+            if not antiAfkConn then
+                antiAfkConn = LocalPlayer.Idled:Connect(function()
+                    VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                    task.wait(1)
+                    VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+                end)
+            end
+        else
+            if antiAfkConn then
+                antiAfkConn:Disconnect()
+                antiAfkConn = nil
+            end
+        end
+    end,
+})
+
+local antiLagEnabled = false
+local savedStates = {}
+
+ANTab:CreateToggle({
+    Name = "안티렉",
+    CurrentValue = false,
+    Flag = "AntiLagToggle",
+    Callback = function(Value)
+        antiLagEnabled = Value
+        if antiLagEnabled then
+            savedStates = {}
+            for _, obj in pairs(game:GetDescendants()) do
+                if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") or obj:IsA("Trail") or obj:IsA("Beam") then
+                    savedStates[obj] = obj.Enabled
+                    obj.Enabled = false
+                elseif obj:IsA("BasePart") then
+                    savedStates[obj] = {Material = obj.Material, Reflectance = obj.Reflectance}
+                    obj.Material = Enum.Material.SmoothPlastic
+                    obj.Reflectance = 0
+                end
+            end
+        else
+            for obj, state in pairs(savedStates) do
+                if obj and obj.Parent then
+                    if typeof(state) == "boolean" then
+                        obj.Enabled = state
+                    elseif typeof(state) == "table" then
+                        obj.Material = state.Material
+                        obj.Reflectance = state.Reflectance
+                    end
+                end
+            end
+            savedStates = {}
+        end
+    end,
+})
+
+local fullbrightEnabled = false
+local origLightingProps = {}
+local fbConn = nil
+
+ANTab:CreateToggle({
+    Name = "안티 어둠",
+    CurrentValue = false,
+    Flag = "FullbrightToggle",
+    Callback = function(Value)
+        fullbrightEnabled = Value
+        if fullbrightEnabled then
+            origLightingProps = {
+                Brightness = Lighting.Brightness,
+                ClockTime = Lighting.ClockTime,
+                GlobalShadows = Lighting.GlobalShadows,
+                OutdoorAmbient = Lighting.OutdoorAmbient
+            }
+            fbConn = RunService.RenderStepped:Connect(function()
+                if fullbrightEnabled then
+                    Lighting.Brightness = 2
+                    Lighting.ClockTime = 14
+                    Lighting.GlobalShadows = false
+                    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+                end
+            end)
+        else
+            if fbConn then
+                fbConn:Disconnect()
+                fbConn = nil
+            end
+            if origLightingProps.Brightness ~= nil then
+                Lighting.Brightness = origLightingProps.Brightness
+                Lighting.ClockTime = origLightingProps.ClockTime
+                Lighting.GlobalShadows = origLightingProps.GlobalShadows
+                Lighting.OutdoorAmbient = origLightingProps.OutdoorAmbient
+            end
+        end
+    end,
+})
+
+local origFogEnd = Lighting.FogEnd
+local origFogStart = Lighting.FogStart
+local origAtmospheres = {}
+
+ANTab:CreateToggle({
+    Name = "안티 안개",
+    CurrentValue = false,
+    Flag = "AntiFogToggle",
+    Callback = function(Value)
+        if Value then
+            origFogEnd = Lighting.FogEnd
+            origFogStart = Lighting.FogStart
+            Lighting.FogStart = 0
+            Lighting.FogEnd = 1e9
+            origAtmospheres = {}
+            for _, v in pairs(Lighting:GetChildren()) do
+                if v:IsA("Atmosphere") then
+                    origAtmospheres[v] = v.Density
+                    v.Density = 0
+                end
+            end
+        else
+            Lighting.FogStart = origFogStart
+            Lighting.FogEnd = origFogEnd
+            for atmosphere, density in pairs(origAtmospheres) do
+                if atmosphere and atmosphere.Parent then
+                    atmosphere.Density = density
+                end
+            end
+            origAtmospheres = {}
+        end
+    end,
+})
+
+local defaultHipHeight = 2
+task.spawn(function()
+    local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local hum = char:WaitForChild("Humanoid", 5)
+    if hum then
+        defaultHipHeight = hum.HipHeight
+    end
+end)
+
+ANTab:CreateSlider({
+    Name = "힙 하이스트",
+    Range = {0, 100},
+    Increment = 1,
+    Suffix = "",
+    CurrentValue = 2,
+    Flag = "HipHeightSlider",
+    Callback = function(Value)
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").HipHeight = Value
+        end
+    end,
+})
+
+local antiFlingEnabled = false
+local antiFlingConn = nil
+local savedCanCollide = {}
+
+ANTab:CreateToggle({
+    Name = "안티플링",
+    CurrentValue = false,
+    Flag = "AntiFlingToggle",
+    Callback = function(Value)
+        antiFlingEnabled = Value
+        if antiFlingEnabled then
+            savedCanCollide = {}
+            antiFlingConn = RunService.Stepped:Connect(function()
+                if not antiFlingEnabled then return end
+                for _, player in pairs(Players:GetPlayers()) do
+                    if player ~= LocalPlayer and player.Character then
+                        for _, part in pairs(player.Character:GetDescendants()) do
+                            if part:IsA("BasePart") then
+                                if savedCanCollide[part] == nil then
+                                    savedCanCollide[part] = part.CanCollide
+                                end
+                                part.CanCollide = false
+                            end
+                        end
+                    end
+                end
+            end)
+        else
+            if antiFlingConn then
+                antiFlingConn:Disconnect()
+                antiFlingConn = nil
+            end
+            for part, collide in pairs(savedCanCollide) do
+                if part and part.Parent then
+                    part.CanCollide = collide
+                end
+            end
+            savedCanCollide = {}
+        end
+    end,
 })
