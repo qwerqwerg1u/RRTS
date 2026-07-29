@@ -49,7 +49,7 @@ local PlTab = Window:CreateTab("플레이어설정")
 local ANTab = Window:CreateTab("잡기능")
 local bdTab = Window:CreateTab("배경")
 
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "기본값",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -95,7 +95,7 @@ bdTab:AddButton({
     end
 })
 
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "낮시간",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -143,7 +143,7 @@ bdTab:AddButton({
     end
 })
 
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "새벽",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -207,7 +207,7 @@ bdTab:AddButton({
     end
 })
 
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "아침",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -315,7 +315,7 @@ bdTab:AddButton({
     end
 })
 ]]
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "사이버네틱스",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -361,7 +361,7 @@ bdTab:AddButton({
     end
 })
 
-bdTab:AddButton({
+bdTab:CreateButton({
     Name = "황혼의 낙원",
     Callback = function()
         local Lighting = game:GetService("Lighting")
