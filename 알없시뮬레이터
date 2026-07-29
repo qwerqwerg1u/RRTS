@@ -1,5 +1,4 @@
--- This file was protected using Luraph Obfuscator v14.7 [https://lura.ph/]
-
+-- This file 
 
 local fs,fm,Td,Xl,id,mg=bit32.bxor,getmetatable,pairs,type
 local Vk,Bi,ch,is,Tr,an_,sy,VD,Fx,xv,vc,ks,La,Yb,Zr,FE,kg,Pt,cy,St,Yy,Zx,Fq,js,vi;
