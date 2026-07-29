@@ -2797,6 +2797,32 @@ PlTab:CreateToggle({
         noclipEnabled = Value
     end,
 })
+local cameraLockEnabled = false
+local cameraLockConn = nil
+
+PlTab:CreateToggle({
+    Name = "카메라 락",
+    CurrentValue = false,
+    Flag = "CameraLockToggle",
+    Callback = function(Value)
+        cameraLockEnabled = Value
+        if cameraLockEnabled then
+            LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+            cameraLockConn = RunService.RenderStepped:Connect(function()
+                if cameraLockEnabled then
+                    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+                end
+            end)
+        else
+            if cameraLockConn then
+                cameraLockConn:Disconnect()
+                cameraLockConn = nil
+            end
+            LocalPlayer.CameraMode = Enum.CameraMode.Classic
+            UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+        end
+    end,
+})
 
 local antiAfkConn = nil
 local antiAfkEnabled = false
