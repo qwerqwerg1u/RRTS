@@ -79,13 +79,34 @@ local function saveOriginalLighting()
 
     originalEffects = {}
     for _, obj in ipairs(Lighting:GetChildren()) do
-        if obj:IsA("Sky") or obj:IsA("Atmosphere") 
-        or obj:IsA("BloomEffect") or obj:IsA("ColorCorrectionEffect") 
-        or obj:IsA("SunRaysEffect") or obj:IsA("PostEffect") then
-            table.insert(originalEffects, {
+        if obj:IsA("Sky") then
+            local skyData = {
                 Object = obj,
-                Parent = obj.Parent
-            })
+                Type = "Sky",
+                Properties = {
+                    SkyboxBk = obj.SkyboxBk,
+                    SkyboxDn = obj.SkyboxDn,
+                    SkyboxFt = obj.SkyboxFt,
+                    SkyboxLf = obj.SkyboxLf,
+                    SkyboxRt = obj.SkyboxRt,
+                    SkyboxUp = obj.SkyboxUp,
+                    CelestialBodiesShown = obj.CelestialBodiesShown,
+                    MoonAngularSize = obj.MoonAngularSize,
+                    MoonTextureId = obj.MoonTextureId,
+                    SunAngularSize = obj.SunAngularSize,
+                    SunTextureId = obj.SunTextureId,
+                    StarCount = obj.StarCount
+                }
+            }
+            table.insert(originalEffects, skyData)
+        elseif obj:IsA("PostEffect") or obj:IsA("Atmosphere") then
+            if pcall(function() return obj.Enabled end) then
+                table.insert(originalEffects, {
+                    Object = obj,
+                    Type = "Effect",
+                    Enabled = obj.Enabled
+                })
+            end
         end
     end
 end
@@ -105,13 +126,24 @@ bdTab:CreateButton({
             end)
         end
 
-        for _, info in ipairs(originalEffects) do
-            if info.Object then
-                info.Object.Parent = info.Parent
+        for _, item in ipairs(originalEffects) do
+            if item.Object and item.Object.Parent then
+                if item.Type == "Sky" then
+                    for prop, val in pairs(item.Properties) do
+                        pcall(function()
+                            item.Object[prop] = val
+                        end)
+                    end
+                elseif item.Type == "Effect" then
+                    pcall(function()
+                        item.Object.Enabled = item.Enabled
+                    end)
+                end
             end
         end
     end
 })
+
 
 bdTab:CreateButton({
     Name = "낮시간",
