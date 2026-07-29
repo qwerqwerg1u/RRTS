@@ -45,53 +45,71 @@ local Window = Rayfield:CreateWindow({
         FileName = "Config"
     }
 })
+local bdTab = Window:CreateTab("배경")
 local PlTab = Window:CreateTab("플레이어설정")
 local ANTab = Window:CreateTab("잡기능")
-local bdTab = Window:CreateTab("배경")
+
+local Lighting = game:GetService("Lighting")
+
+local originalLightingProps = {}
+local originalEffects = {}
+local isSaved = false
+
+local function saveOriginalLighting()
+    if isSaved then return end
+    isSaved = true
+    
+    originalLightingProps = {
+        Ambient = Lighting.Ambient,
+        Brightness = Lighting.Brightness,
+        ColorShift_Bottom = Lighting.ColorShift_Bottom,
+        ColorShift_Top = Lighting.ColorShift_Top,
+        EnvironmentDiffuseScale = Lighting.EnvironmentDiffuseScale,
+        EnvironmentSpecularScale = Lighting.EnvironmentSpecularScale,
+        GlobalShadows = Lighting.GlobalShadows,
+        OutdoorAmbient = Lighting.OutdoorAmbient,
+        ShadowSoftness = Lighting.ShadowSoftness,
+        Technology = Lighting.Technology,
+        ClockTime = Lighting.ClockTime,
+        GeographicLatitude = Lighting.GeographicLatitude,
+        FogColor = Lighting.FogColor,
+        FogEnd = Lighting.FogEnd,
+        FogStart = Lighting.FogStart
+    }
+
+    originalEffects = {}
+    for _, obj in ipairs(Lighting:GetChildren()) do
+        if obj:IsA("Sky") or obj:IsA("Atmosphere") 
+        or obj:IsA("BloomEffect") or obj:IsA("ColorCorrectionEffect") 
+        or obj:IsA("SunRaysEffect") or obj:IsA("PostEffect") then
+            table.insert(originalEffects, {
+                Object = obj,
+                Parent = obj.Parent
+            })
+        end
+    end
+end
+
+task.spawn(saveOriginalLighting)
 
 bdTab:CreateButton({
     Name = "기본값",
     Callback = function()
-        local Lighting = game:GetService("Lighting")
-
-        for _, obj in ipairs(Lighting:GetChildren()) do
-            if obj:IsA("Sky") or obj:IsA("Atmosphere") 
-            or obj:IsA("BloomEffect") or obj:IsA("ColorCorrectionEffect") 
-            or obj:IsA("SunRaysEffect") then
-                obj:Destroy()
-            end
+        if not isSaved then
+            saveOriginalLighting()
         end
 
-        Lighting.Ambient = Color3.fromRGB(120, 120, 120)
-        Lighting.Brightness = 2
-        Lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
-        Lighting.ColorShift_Top = Color3.fromRGB(0, 0, 0)
-        Lighting.EnvironmentDiffuseScale = 0
-        Lighting.EnvironmentSpecularScale = 0.25
-        Lighting.GlobalShadows = true
-        Lighting.OutdoorAmbient = Color3.fromRGB(200, 200, 200)
-        Lighting.ShadowSoftness = 0.2
-        Lighting.Technology = Enum.Technology.Future
-        Lighting.ClockTime = 14
-        Lighting.GeographicLatitude = 41.735
-        Lighting.FogColor = Color3.fromRGB(192, 192, 192)
-        Lighting.FogEnd = 100000
-        Lighting.FogStart = 0
+        for prop, value in pairs(originalLightingProps) do
+            pcall(function()
+                Lighting[prop] = value
+            end)
+        end
 
-        local sky = Instance.new("Sky")
-        sky.Parent = Lighting
-        sky.CelestialBodiesShown = true
-        sky.MoonAngularSize = 0
-        sky.MoonTextureId = "rbxasset://sky/moon.jpg"
-        sky.SkyboxBk = "rbxassetid://8995816670"
-        sky.SkyboxDn = "rbxassetid://8995686153"
-        sky.SkyboxFt = "rbxassetid://8995816670"
-        sky.SkyboxLf = "rbxassetid://8995816670"
-        sky.SkyboxRt = "rbxassetid://8995816670"
-        sky.SkyboxUp = "rbxassetid://8995814929"
-        sky.StarCount = 3000
-        sky.SunAngularSize = 30
-        sky.SunTextureId = "rbxassetid://8923082571"
+        for _, info in ipairs(originalEffects) do
+            if info.Object then
+                info.Object.Parent = info.Parent
+            end
+        end
     end
 })
 
