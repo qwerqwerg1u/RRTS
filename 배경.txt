@@ -263,7 +263,7 @@ bdTab:AddButton({
         sunrays.Spread = 0.167
     end
 })
-
+--[[
 bdTab:AddButton({
     Name = "제론의 회상",
     Callback = function()
@@ -311,6 +311,7 @@ bdTab:AddButton({
         cc.TintColor = Color3.fromRGB(220, 235, 255)
     end
 })
+]]
 bdTab:AddButton({
     Name = "사이버네틱스",
     Callback = function()
@@ -673,7 +674,7 @@ bdTab:CreateButton({
     end
 })
 bdTab:CreateButton({
-    Name = "🌌 은하수 파노라마",
+    Name = " 은하수 파노라마",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -726,7 +727,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌅 심해의 부서지는 노을",
+    Name = " 심해의 부서지는 노을",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -791,7 +792,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "✨ 아틀란티스 요정의 숲",
+    Name = " 아틀란티스 요정의 숲",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -855,7 +856,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🏙️ 폭우 뒤 비친 네온시티",
+    Name = "폭우 뒤 비친 네온시티",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -915,7 +916,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "⛅ 신들의 안개낀 성소",
+    Name = "신들의 안개낀 성소",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -978,7 +979,7 @@ bdTab:CreateButton({
     end
 })
 bdTab:CreateButton({
-    Name = "🌌 코스믹 인피니티 (우주)",
+    Name = "코스믹 인피니티 (우주)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1030,7 +1031,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🏔️ 에메랄드 오로라 밤하늘",
+    Name = " 에메랄드 오로라 밤하늘",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1091,7 +1092,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌸 봄날의 낙원 (애니 감성)",
+    Name = "봄날의 낙원 (애니 감성)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1155,7 +1156,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🏜️ 고대 사막의 황금기",
+    Name = " 고대 사막의 황금기",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1218,7 +1219,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "💧 비 개인 유리빛 세상",
+    Name = " 비 개인 유리빛 세상",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1280,7 +1281,7 @@ bdTab:CreateButton({
     end
 })
 bdTab:CreateButton({
-    Name = "🔮 안드로메다의 눈물 (보랏빛 성운)",
+    Name = "안드로메다의 눈물 (보랏빛 성운)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1331,7 +1332,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "☄️ 유성우가 쏟아지는 심야",
+    Name = " 유성우가 쏟아지는 심야",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1381,7 +1382,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🪐 거대 행성의 중력 (SF 우주)",
+    Name = " 거대 행성의 중력 (노무현)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1432,7 +1433,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🩸 핏빛으로 물든 멸망의 달",
+    Name = "핏빛으로 물든 멸망의 달",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1492,7 +1493,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌅 아스달의 지평선 (붉은 성운)",
+    Name = " 아스달의 지평선 (붉은 성운)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1542,7 +1543,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌌 황금빛 스페이스 네불라",
+    Name = "황금빛 스페이스 네불라",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1593,7 +1594,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "❄️ 영원한 겨울의 혹한 오로라",
+    Name = " 영원한 겨울의 혹한 오로라",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1644,7 +1645,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌆 스카이라인 애니메이션 노을",
+    Name = "스카이라인 애니메이션 노을",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1704,7 +1705,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌌 평행 우주의 신비 (사이언스 필드)",
+    Name = "평행 우주의 신비 (사이언스 필드)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
@@ -1755,7 +1756,7 @@ bdTab:CreateButton({
 })
 
 bdTab:CreateButton({
-    Name = "🌌 딥 스페이스 나이트메어 (암흑 성운)",
+    Name = " 딥 스페이스 나이트메어 (암흑 성운)",
     Callback = function()
         local Lighting = game:GetService("Lighting")
 
