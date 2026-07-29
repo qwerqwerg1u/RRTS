@@ -49,8 +49,10 @@ local Window = Rayfield:CreateWindow({
 local bdTab = Window:CreateTab("배경")
 local PlTab = Window:CreateTab("플레이어설정")
 local ANTab = Window:CreateTab("잡기능")
+bdTab:CreateSection("개발자")
 bdTab:CreateLabel("개발자 지크♡♡")
-bdTab:CreateLabel("일부 배경이 초기화불가능한배경이 있습니다.")
+bdTab:CreateLabel("일부 배경은 초기화 불가능한 배경이 있습니다.")
+
 local Lighting = game:GetService("Lighting")
 
 local originalLightingProps = {}
