@@ -49,7 +49,8 @@ local Window = Rayfield:CreateWindow({
 local bdTab = Window:CreateTab("배경")
 local PlTab = Window:CreateTab("플레이어설정")
 local ANTab = Window:CreateTab("잡기능")
-
+bdTab:CreateLabel("개발자 지크♡♡")
+bdTab:CreateLabel("일부 배경이 초기화불가능한배경이 있습니다.)
 local Lighting = game:GetService("Lighting")
 
 local originalLightingProps = {}
@@ -113,7 +114,7 @@ local function saveOriginalLighting()
 end
 
 task.spawn(saveOriginalLighting)
-
+bdTab:CreateSection("초기화")
 bdTab:CreateButton({
     Name = "기본값",
     Callback = function()
@@ -145,7 +146,7 @@ bdTab:CreateButton({
     end
 })
 
-
+bdTab:CreateSection("배경들")
 bdTab:CreateButton({
     Name = "낮시간",
     Callback = function()
@@ -2788,7 +2789,7 @@ RunService.Stepped:Connect(function()
         end
     end
 end)
-
+PlTab:CreateSection("플레이어설정")
 PlTab:CreateSlider({
     Name = "걷기속도",
     Range = {16, 500},
@@ -2812,7 +2813,7 @@ PlTab:CreateSlider({
         jumpPowerVal = Value
     end,
 })
-
+PlTab:CreateSection("이외")
 PlTab:CreateToggle({
     Name = "무한점프",
     CurrentValue = false,
@@ -2856,7 +2857,7 @@ PlTab:CreateToggle({
         end
     end,
 })
-
+ANTab:CreateSection("잡기능들")
 local antiAfkConn = nil
 local antiAfkEnabled = false
 
