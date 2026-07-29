@@ -1,0 +1,2021 @@
+-- ts file was generated at discord.gg/25ms
+
+local genv = getgenv()
+local fenv = getfenv()
+local _5 = loadstring(game:HttpGet('https://raw.githubusercontent.com/deividcomsono/Obsidian/main/Library.lua'))()
+local _9 = loadstring(game:HttpGet('https://raw.githubusercontent.com/deividcomsono/Obsidian/main/addons/SaveManager.lua'))()
+local _13 = loadstring(game:HttpGet('https://raw.githubusercontent.com/deividcomsono/Obsidian/main/addons/ThemeManager.lua'))()
+local _ = _5.Toggles
+
+_5.ForceCheckbox = false
+_5.ShowToggleFrameInKeybinds = true
+
+local _Scheme16 = _5.Scheme
+
+_Scheme16.AccentColor = Color3.fromRGB(0, 255, 33)
+
+_5:UpdateColorsUsingRegistry()
+game:GetService('ReplicatedStorage')
+
+local _call26 = game:GetService('RunService')
+local _call28 = game:GetService('TeleportService')
+local _call30 = game:GetService('HttpService')
+local _call32 = game:GetService('UserInputService')
+
+game:GetService('TweenService')
+game:GetService('Lighting')
+game:GetService('VirtualInputManager')
+game:GetService('CoreGui')
+
+local _LocalPlayer43 = game:GetService('Players').LocalPlayer
+
+genv.AutoSkip = false
+genv.AutoPlayAgain = false
+genv.AutoUpgradeWeapon = false
+genv.selectedUpgradeWeapons = {}
+genv.KillAuraEnabled = false
+genv.KillAuraMode = 'V1'
+genv.KillAuraRange = 5000
+genv.KillAuraDamage = 999999999
+genv.KillAuraV2Multiplier = 1
+genv.AutoSafezoneEnabled = false
+genv.AutoResetWave = false
+genv.AntiLagEnabled = false
+genv.AutoCreateLobbyEnabled = false
+genv.miscFlyEnabled = false
+genv.miscFlySpeed = 50
+genv.miscInfJumpEnabled = false
+genv.miscNoClipEnabled = false
+genv.miscAntiAfkEnabled = false
+genv.MISC_FLYING = false
+genv.miscFlyKeyDown = nil
+genv.miscFlyKeyUp = nil
+genv.miscFlyHB = nil
+genv.miscFlyDied = nil
+genv.miscFlyGyro = nil
+genv.miscFlyVel = nil
+genv.miscInfJumpConn = nil
+genv.miscNoClipConn = nil
+genv.AutoSkillEnabled = false
+genv.selectedSkillKeys = {
+    [1] = 'E',
+}
+genv.AutoUpgradeHealEnabled = false
+genv.AutoUpgradeWeaponEnabled = false
+genv.PlatformWalkEnabled = false
+genv.WalkHeight = 15
+genv.AntiGameplayPauseEnabled = false
+genv.AutoEquipEnabled = false
+genv.AutoRedeemCode = false
+genv.ZombieESPEnabled = false
+genv.PlayerESPEnabled = false
+genv.AutoUpgradeGearEnabled = false
+genv.SelectedUpgradeGear = 'AutoTurret'
+genv.InfReviveEnabled = false
+genv.AutoFindBestWaveEnabled = false
+genv.TargetWaveNumber = 10
+genv.KillAuraV3Damage = 999999999
+genv.KillAuraV3HitPosition = 'ZombiePosition'
+genv.AutoClaimDailyChest = false
+genv.AutoEquipBestArtifact = false
+genv.AutoEquipArtifact = false
+genv.SelectedArtifact = 'AttackOrb'
+genv.AutoBuyArtifactSlot = false
+genv.ArtifactSlotToBuy = 1
+genv.AutoSpinArtifact = false
+genv.AutoSpinBloodmoon = false
+genv.BloodmoonShardEnabled = false
+genv.BloodmoonShardMode = 'Tween'
+genv.BloodmoonShardTweenSpeed = 50
+genv.BloodmoonShardOrigin = nil
+genv.BloodmoonShardBusy = false
+genv.InstantClearEnabled = false
+genv.InstantClearOriginalCFrame = nil
+genv.InstantClearOriginalWalkSpeed = nil
+genv.InstantClearOriginalJumpPower = nil
+genv.UpgradeWeaponInterval = 1
+genv.UpgradeHealthInterval = 1
+
+task.spawn(function()
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    task.wait()
+
+    local _ = genv.PlatformWalkEnabled
+
+    error('internal 583: <25ms: infinitelooperror>')
+end)
+workspace:FindFirstChild('YourZombieZone')
+workspace:FindFirstChild('Gates')
+workspace.Gates.Destroy(workspace.Gates)
+
+local _call304 = Instance.new('Part')
+
+_call304.Name = 'CyraaPlatform'
+_call304.Size = Vector3.new(14, 1, 14)
+_call304.Anchored = true
+_call304.CanCollide = true
+_call304.Transparency = 1
+_call304.Parent = workspace
+
+local _call308 = Instance.new('Part')
+
+_call308.Name = 'CyraaInstantPlatform'
+_call308.Size = Vector3.new(20, 2, 20)
+_call308.Anchored = true
+_call308.CanCollide = true
+_call308.Transparency = 1
+_call308.Color = Color3.fromRGB(0, 255, 0)
+_call308.Material = Enum.Material.SmoothPlastic
+_call308.Parent = workspace
+_call308.Position = Vector3.new(0, -9999, 0)
+
+task.spawn(function()
+    task.wait(0.05)
+
+    local _ = genv.KillAuraEnabled
+
+    task.wait(0.05)
+
+    local _ = genv.KillAuraEnabled
+
+    error('internal 583: <25ms: infinitelooperror>')
+end)
+task.spawn(function()
+    task.wait(30)
+    error('internal 583: <25ms: infinitelooperror>')
+end)
+_call26.Heartbeat.Connect(_call26.Heartbeat, function()
+    local _ = genv.AutoEquipEnabled
+end)
+_call26.Heartbeat.Connect(_call26.Heartbeat, function()
+    local _ = genv.ZombieESPEnabled
+    local _ = genv.PlayerESPEnabled
+end)
+_call26.Heartbeat.Connect(_call26.Heartbeat, function()
+    local _ = genv.AutoUpgradeGearEnabled
+    local _ = genv.AutoClaimDailyChest
+    local _ = genv.AutoEquipBestArtifact
+    local _ = genv.AutoEquipArtifact
+    local _ = genv.AutoBuyArtifactSlot
+    local _ = genv.AutoSpinArtifact
+    local _ = genv.AutoSpinBloodmoon
+    local _ = genv.BloodmoonShardEnabled
+end)
+
+genv.autoHopEnabled = false
+genv.autoHopInterval = 5
+fenv.hopToRandomServer = function()
+    for _360, _360_2 in pairs(_call30:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true')).data)do
+        local _ = _360_2.playing < _360_2.maxPlayers
+        local _ = _360_2.id == game.JobId
+    end
+
+    _call28:TeleportToPlaceInstance(game.PlaceId, _360_2.id, _LocalPlayer43)
+end
+fenv.hopToLeastPlayersServer = function() end
+fenv.toggleBlackScreen = function(_373) end
+fenv.toggleDisable3D = function(_374) end
+fenv.toggleRemoveFog = function(_375) end
+
+local _call377 = _5:CreateWindow({
+    AutoShow = true,
+    Title = 'Cyraa Hub',
+    Footer = 'Survive Zombie Arena v1.5.4',
+    NotifySide = 'Right',
+    Center = true,
+    Icon = 111485823583751,
+    ShowCustomCursor = true,
+})
+local _call380 = Instance.new('ScreenGui')
+
+_call380.Name = 'Cyraa'
+_call380.ResetOnSpawn = false
+_call380.IgnoreGuiInset = true
+_call380.DisplayOrder = 999
+_call380.Parent = gethui()
+
+local _call382 = Instance.new('TextButton')
+
+_call382.Size = UDim2.new(0, 55, 0, 55)
+_call382.Position = UDim2.new(0, 10, 0, ((game:GetService('Workspace').CurrentCamera.ViewportSize.Y / 2) - 27.5))
+_call382.BackgroundTransparency = 1
+_call382.BorderSizePixel = 0
+_call382.AutoButtonColor = false
+_call382.Text = ''
+_call382.ZIndex = 100
+_call382.Parent = _call380
+
+local _call393 = Instance.new('ImageLabel')
+
+_call393.Image = 'rbxassetid://111485823583751'
+_call393.Size = UDim2.new(0.7, 0, 0.7, 0)
+_call393.Position = UDim2.new(0.15, 0, 0.15, 0)
+_call393.BackgroundTransparency = 1
+_call393.ZIndex = 101
+_call393.Parent = _call382
+
+_call382.InputBegan.Connect(_call382.InputBegan, function(_402) end)
+_call382.InputEnded.Connect(_call382.InputEnded, function(_407) end)
+_call32.InputChanged.Connect(_call32.InputChanged, function(_412) end)
+
+local _call414 = _call377:AddTab('Home', 'house')
+local _call416 = _call377:AddTab('Auto Farm', 'cpu')
+local _call418 = _call377:AddTab('Shop/Lobby', 'shopping-cart')
+local _call420 = _call377:AddTab('Player', 'user')
+local _call422 = _call377:AddTab('Misc', 'settings')
+local _call424 = _call377:AddTab('Server', 'server')
+local _call426 = _call377:AddTab('Settings', 'wrench')
+local _call428 = _call414:AddLeftGroupbox('Game Information', 'info')
+
+_call428:AddLabel('Game Time: 0s')
+_call428:AddLabel('FPS: 0')
+_call428:AddLabel('Ping: 0ms')
+_call428:AddLabel('Wave: -')
+_call428:AddLabel('Minerals: 0')
+
+local _call440 = _call420:AddLeftGroupbox('Stats', 'bar-chart-2')
+
+_call440:AddLabel('Kills: 0')
+_call440:AddLabel('Crystals: 0')
+_call440:AddLabel('Bloodmoon Shards: 0')
+task.spawn(function() end)
+
+local _call451 = _call414:AddRightGroupbox('Social Links', 'link')
+
+_call451:AddButton({
+    Func = function() end,
+    Text = 'Copy Discord Link',
+})
+_call451:AddButton({
+    Func = function() end,
+    Text = 'Copy TikTok Link',
+})
+_call451:AddButton({
+    Func = function() end,
+    Text = 'Copy Donate Link',
+})
+
+local _call462 = _call416:AddLeftGroupbox('Combat', 'swords')
+
+_call462:AddToggle('AutoUpgradeHeal', {
+    Text = 'Auto Upgrade Heal',
+    Default = false,
+    Callback = function(_465) end,
+})
+_call462:AddSlider('HealthInterval', {
+    Min = 0.1,
+    Default = 1,
+    Max = 10,
+    Text = 'Health Upgrade Interval (sec)',
+    Callback = function(_468) end,
+    Rounding = 1,
+})
+_call462:AddToggle('AutoUpgradeWeaponCombat', {
+    Text = 'Auto Upgrade Weapon',
+    Default = false,
+    Callback = function(_471) end,
+})
+_call462:AddSlider('WeaponInterval', {
+    Min = 0.1,
+    Default = 1,
+    Max = 10,
+    Text = 'Weapon Upgrade Interval (sec)',
+    Callback = function(_474) end,
+    Rounding = 1,
+})
+_call462:AddSlider('SafeZoneHeight', {
+    Min = 15,
+    Default = 15,
+    Max = 50,
+    Text = 'Safe Zone Height Level',
+    Callback = function(_477) end,
+    Rounding = 0,
+})
+_call462:AddToggle('PlatformWalk', {
+    Text = 'Safe Zone Height',
+    Default = false,
+    Callback = function(_480) end,
+})
+_call462:AddToggle('AutoEquipGun', {
+    Text = 'Auto Equip Gun',
+    Default = false,
+    Callback = function(_483) end,
+})
+_call462:AddToggle('InfRevive', {
+    Text = 'Inf Revive',
+    Default = false,
+    Callback = function(_486) end,
+})
+
+local _call488 = _call416:AddLeftGroupbox('Auto Skill', 'zap')
+
+_call488:AddDropdown('SkillKeys', {
+    Values = {
+        [1] = 'E',
+        [2] = 'R',
+        [3] = 'Q',
+    },
+    Multi = true,
+    Text = 'Skill Keys',
+    Callback = function(_491) end,
+    Default = {},
+})
+_call488:AddToggle('AutoSkill', {
+    Text = 'Auto Skill',
+    Default = false,
+    Callback = function(_494) end,
+})
+
+local _call496 = _call416:AddLeftGroupbox('Kill Aura', 'crosshair')
+
+_call496:AddDropdown('KillAuraMode', {
+    Callback = function(_499) end,
+    Text = 'Kill Aura Mode',
+    Values = {
+        [1] = 'V1',
+        [2] = 'V2',
+        [3] = 'V3',
+    },
+    Default = 'V1',
+})
+_call496:AddSlider('KillAuraRange', {
+    Min = 100,
+    Default = 5000,
+    Max = 5000,
+    Text = 'Range',
+    Callback = function(_502) end,
+    Rounding = 0,
+})
+_call496:AddInput('KillAuraDmg', {
+    Text = 'Damage (V1)',
+    Default = '999999999',
+    Callback = function(_505) end,
+})
+_call496:AddSlider('KillAuraV2Mult', {
+    Min = 1,
+    Default = 1,
+    Max = 100,
+    Text = 'Multiplier (V2)',
+    Callback = function(_508) end,
+    Rounding = 0,
+})
+_call496:AddInput('KillAuraV3Dmg', {
+    Text = 'Damage (V3)',
+    Default = '999999999',
+    Callback = function(_511) end,
+})
+_call496:AddDropdown('KillAuraV3HitPos', {
+    Callback = function(_514) end,
+    Text = 'Hit Position (V3)',
+    Values = {
+        [1] = 'ZombiePosition',
+        [2] = 'PlayerPosition',
+        [3] = 'Random',
+    },
+    Default = 'ZombiePosition',
+})
+_call496:AddToggle('KillAura', {
+    Text = 'Kill Aura',
+    Default = false,
+    Callback = function(_517) end,
+})
+
+local _call519 = _call416:AddRightGroupbox('Wave Control', 'activity')
+
+_call519:AddButton({
+    Func = function() end,
+    Text = 'Skip Wave Once',
+})
+_call519:AddToggle('AutoSkipWave', {
+    Text = 'Auto Skip Wave',
+    Default = false,
+    Callback = function(_525) end,
+})
+_call519:AddToggle('AutoPlayAgain', {
+    Text = 'Auto Play Again',
+    Default = false,
+    Callback = function(_528) end,
+})
+_call519:AddInput('ResetWaveNum', {
+    Text = 'Reset at Wave Number',
+    Default = '10',
+    Callback = function(_531) end,
+})
+_call519:AddToggle('AutoResetWave', {
+    Text = 'Auto Reset at Wave',
+    Default = false,
+    Callback = function(_534) end,
+})
+
+local _call536 = _call416:AddRightGroupbox('Bloodmoon Shard', 'moon')
+
+_call536:AddDropdown('BloodmoonShardMode', {
+    Callback = function(_539) end,
+    Text = 'Shard Collection Mode',
+    Values = {
+        [1] = 'Teleport',
+        [2] = 'Tween',
+    },
+    Default = 'Tween',
+})
+_call536:AddSlider('BloodmoonShardSpeed', {
+    Min = 10,
+    Default = 50,
+    Max = 500,
+    Text = 'Tween Speed',
+    Callback = function(_542) end,
+    Rounding = 0,
+})
+_call536:AddToggle('AutoBloodmoonShard', {
+    Text = 'Auto Collect Bloodmoon Shard',
+    Default = false,
+    Callback = function(_545) end,
+})
+
+local _call547 = _call416:AddRightGroupbox('Redeem Code', 'gift')
+
+_call547:AddButton({
+    Func = function() end,
+    Text = 'Redeem All Codes Once',
+})
+_call547:AddToggle('AutoRedeemCode', {
+    Text = 'Auto Redeem All Codes',
+    Default = false,
+    Callback = function(_553) end,
+})
+_call416:AddRightGroupbox('Instant Clear', 'zap'):AddToggle('InstantClear', {
+    Text = 'Instant Clear',
+    Default = false,
+    Callback = function(_558) end,
+})
+
+local _call560 = _call418:AddLeftGroupbox('Upgrade Weapon', 'sword')
+
+_call560:AddDropdown('BuyWeapons', {
+    Values = {
+        [1] = 'Pistol',
+        [2] = 'Revolver',
+        [3] = 'DualPistols',
+        [4] = 'USPS',
+        [5] = 'Deagle',
+        [6] = 'CosmicPistol',
+        [7] = 'ShotGun',
+        [8] = 'SMG',
+        [9] = 'CombatShotgun',
+        [10] = 'MP5',
+        [11] = 'HoneyBadger',
+        [12] = 'P90',
+        [13] = 'Quasar',
+        [14] = 'LavaRifle',
+        [15] = 'Rifle',
+        [16] = 'BurstRifle',
+        [17] = 'AK47',
+        [18] = 'Sniper',
+        [19] = 'TommyGun',
+        [20] = 'HeavyRifle',
+        [21] = 'Scar-H',
+        [22] = 'CoreBreaker',
+        [23] = 'LavaBow',
+        [24] = 'Pulsar',
+        [25] = 'Minigun',
+        [26] = 'Flamethrower',
+        [27] = 'GrenadeLauncher',
+        [28] = 'ArticStriker',
+        [29] = 'WorldEnder',
+        [30] = 'GumdropBlaster',
+        [31] = 'InfernoMinigun',
+        [32] = 'LavaGatling',
+        [33] = 'GoldenAK47',
+        [34] = 'AcidSpitter',
+        [35] = 'Interstellar',
+        [36] = 'VoidScythe',
+        [37] = 'Redline',
+        [38] = 'EmberSMG',
+        [39] = 'Plasma',
+        [40] = 'GalacticWeaver',
+    },
+    Multi = true,
+    Text = 'Weapons to Upgrade',
+    Callback = function(_563) end,
+    Default = {},
+})
+_call560:AddButton({
+    Func = function() end,
+    Text = 'Upgrade Once',
+})
+_call560:AddToggle('AutoUpgradeWeapon', {
+    Text = 'Auto Upgrade Weapon',
+    Default = false,
+    Callback = function(_569) end,
+})
+
+local _call571 = _call418:AddRightGroupbox('Upgrade Gears', 'tool')
+
+_call571:AddDropdown('SelectedGear', {
+    Values = {
+        [1] = 'Landmine',
+        [2] = 'LaserTurret',
+        [3] = 'AutoTurret',
+        [4] = 'Barricade',
+        [5] = 'SteelBarricade',
+        [6] = 'FlamethrowerTurret',
+        [7] = 'ShockwaveMine',
+        [8] = 'HealingStation',
+        [9] = 'MendingTower',
+        [10] = 'StimShot',
+        [11] = 'Molotov',
+        [12] = 'VanguardTurret',
+        [13] = 'Cloak',
+        [14] = 'Shuriken',
+        [15] = 'BladeFury',
+        [16] = 'SoulHarvester',
+        [17] = 'RaiseUndead',
+        [18] = 'DeathNova',
+        [19] = 'FragGrenade',
+        [20] = 'Deadeye',
+        [21] = 'TargetMark',
+        [22] = 'Drone',
+        [23] = 'Spikes',
+        [24] = 'Bunker',
+        [25] = 'IceWall',
+        [26] = 'ArcticBlast',
+        [27] = 'Medkit',
+        [28] = 'ShieldGenerator',
+        [29] = 'TeslaCoil',
+        [30] = 'AirdropCrate',
+        [31] = 'NapalmStrike',
+        [32] = 'MortarStrike',
+        [33] = 'SentryGun',
+        [34] = 'ExplosiveMine',
+        [35] = 'SmokeGrenade',
+        [36] = 'FlashGrenade',
+        [37] = 'PortableShield',
+        [38] = 'SpaceBomb',
+        [39] = 'Blackhole',
+        [40] = 'Starfall',
+        [41] = 'Beacon',
+        [42] = 'OverchargePulse',
+        [43] = 'Timewarp',
+    },
+    Multi = true,
+    Text = 'Gear to Upgrade',
+    Callback = function(_574) end,
+    Default = 'AutoTurret',
+})
+_call571:AddToggle('AutoUpgradeGear', {
+    Text = 'Auto Upgrade Gear',
+    Default = false,
+    Callback = function(_577) end,
+})
+
+local _call579 = _call418:AddLeftGroupbox('Lobby Setup', 'users')
+
+_call579:AddDropdown('LobbyDiff', {
+    Callback = function(_582) end,
+    Text = 'Difficulty',
+    Values = {
+        [1] = 'Normal',
+        [2] = 'Hardcore',
+        [3] = 'Nightmare',
+    },
+    Default = 'Normal',
+})
+_call579:AddSlider('PartySize', {
+    Min = 1,
+    Default = 1,
+    Max = 4,
+    Text = 'Party Size',
+    Callback = function(_585) end,
+    Rounding = 0,
+})
+_call579:AddDropdown('LobbyClass', {
+    Callback = function(_588) end,
+    Text = 'Select Class',
+    Values = {
+        [1] = 'Default',
+        [2] = 'Medic',
+        [3] = 'Engineer',
+        [4] = 'Ninja',
+        [5] = 'Demolitionist',
+        [6] = 'Tactician',
+        [7] = 'Necromancer',
+        [8] = 'Marksman',
+        [9] = 'Bastion',
+        [10] = 'Celestial',
+        [11] = 'Overclocker',
+        [12] = 'Bloodmaster',
+        [13] = 'Verdant Warden',
+        [14] = 'Frost Knight',
+    },
+    Default = 'Default',
+})
+_call579:AddDropdown('Slot1Wep', {
+    Callback = function(_591) end,
+    Text = 'Slot 1 Pistol',
+    Values = {
+        [1] = 'Pistol',
+        [2] = 'Revolver',
+        [3] = 'DualPistols',
+        [4] = 'USPS',
+        [5] = 'Deagle',
+        [6] = 'CosmicPistol',
+    },
+    Default = 'Pistol',
+})
+_call579:AddDropdown('Slot2Wep', {
+    Callback = function(_594) end,
+    Text = 'Slot 2 Shotgun',
+    Values = {
+        [1] = 'ShotGun',
+        [2] = 'SMG',
+        [3] = 'CombatShotgun',
+        [4] = 'MP5',
+        [5] = 'HoneyBadger',
+        [6] = 'P90',
+        [7] = 'Quasar',
+        [8] = 'LavaRifle',
+    },
+    Default = 'ShotGun',
+})
+_call579:AddDropdown('Slot3Wep', {
+    Callback = function(_597) end,
+    Text = 'Slot 3 Rifle',
+    Values = {
+        [1] = 'Rifle',
+        [2] = 'BurstRifle',
+        [3] = 'AK47',
+        [4] = 'Sniper',
+        [5] = 'TommyGun',
+        [6] = 'HeavyRifle',
+        [7] = 'Scar-H',
+        [8] = 'CoreBreaker',
+        [9] = 'LavaBow',
+        [10] = 'Pulsar',
+    },
+    Default = 'Rifle',
+})
+_call579:AddDropdown('Slot4Wep', {
+    Callback = function(_600) end,
+    Text = 'Slot 4 Heavy',
+    Values = {
+        [1] = 'Minigun',
+        [2] = 'Flamethrower',
+        [3] = 'GrenadeLauncher',
+        [4] = 'ArticStriker',
+        [5] = 'WorldEnder',
+        [6] = 'GumdropBlaster',
+        [7] = 'InfernoMinigun',
+        [8] = 'LavaGatling',
+        [9] = 'GoldenAK47',
+        [10] = 'AcidSpitter',
+        [11] = 'Interstellar',
+        [12] = 'VoidScythe',
+        [13] = 'Redline',
+    },
+    Default = 'Minigun',
+})
+_call579:AddDropdown('SelectedShip', {
+    Callback = function(_603) end,
+    Text = 'Select Ship',
+    Values = {
+        [1] = 'Ship1',
+        [2] = 'Ship2',
+        [3] = 'Ship3',
+        [4] = 'Ship4',
+    },
+    Default = 'Ship1',
+})
+_call579:AddDropdown('SelectedMap', {
+    Callback = function(_606) end,
+    Text = 'Select Map',
+    Values = {
+        [1] = 'Atlantis',
+        [2] = 'RooftopSiege',
+        [3] = 'AbandonedFarm',
+        [4] = 'PrisonYard',
+    },
+    Default = 'Atlantis',
+})
+_call579:AddButton({
+    Func = function() end,
+    Text = 'Board Ship & Create Lobby',
+})
+_call579:AddToggle('AutoCreateLobby', {
+    Text = 'Auto Create Lobby',
+    Default = false,
+    Callback = function(_612) end,
+})
+_call579:AddButton({
+    Func = function() end,
+    Text = 'Apply Full Lobby Setup',
+})
+
+local _call617 = _call418:AddRightGroupbox('Artifacts', 'star')
+
+_call617:AddToggle('AutoClaimDailyChest', {
+    Text = 'Auto Claim Daily Chest',
+    Default = false,
+    Callback = function(_620) end,
+})
+_call617:AddToggle('AutoEquipBestArtifact', {
+    Text = 'Auto Equip Best Artifact',
+    Default = false,
+    Callback = function(_623) end,
+})
+_call617:AddDropdown('SelectArtifact', {
+    Callback = function(_626) end,
+    Text = 'Select Artifact',
+    Values = {
+        [1] = 'AttackOrb',
+        [2] = 'CombatHelmet',
+        [3] = 'LuckyCoin',
+        [4] = 'Recycler',
+        [5] = 'Thorns',
+        [6] = 'Sword',
+        [7] = 'EnergyDrink',
+        [8] = 'IronDagger',
+        [9] = 'RedToolbox',
+        [10] = 'BloodVial',
+        [11] = 'CryoFuel',
+        [12] = 'HealOrb',
+        [13] = 'Midas',
+        [14] = 'FrostOrb',
+        [15] = 'SpecialDrone',
+        [16] = 'ElectricPillar',
+        [17] = 'Bank',
+        [18] = 'GravityCore',
+        [19] = 'Controller',
+        [20] = 'ChronoCore',
+    },
+    Default = 'AttackOrb',
+})
+_call617:AddToggle('AutoEquipSelectedArtifact', {
+    Text = 'Auto Equip Selected Artifact',
+    Default = false,
+    Callback = function(_629) end,
+})
+_call617:AddButton({
+    Func = function() end,
+    Text = 'Equip Selected Artifact Once',
+})
+_call617:AddSlider('ArtifactSlotToBuy', {
+    Min = 1,
+    Default = 1,
+    Max = 3,
+    Text = 'Slot to Buy',
+    Callback = function(_635) end,
+    Rounding = 0,
+})
+_call617:AddToggle('AutoBuyArtifactSlot', {
+    Text = 'Auto Buy Artifact Slot',
+    Default = false,
+    Callback = function(_638) end,
+})
+_call617:AddButton({
+    Func = function() end,
+    Text = 'Buy Artifact Slot Once',
+})
+_call617:AddButton({
+    Func = function() end,
+    Text = 'Spin Artifact Crate (Standard x1)',
+})
+_call617:AddButton({
+    Func = function() end,
+    Text = 'Spin Artifact Crate (Standard x5)',
+})
+_call617:AddToggle('AutoSpinArtifact', {
+    Text = 'Auto Spin Artifact Crate',
+    Default = false,
+    Callback = function(_650) end,
+})
+_call617:AddButton({
+    Func = function() end,
+    Text = 'Spin Bloodmoon Once',
+})
+_call617:AddToggle('AutoSpinBloodmoon', {
+    Text = 'Auto Spin Bloodmoon',
+    Default = false,
+    Callback = function(_656) end,
+})
+_call420:AddLeftGroupbox('Zombie', 'skull'):AddToggle('HitboxMode', {
+    Text = 'Hitbox Only Mode',
+    Default = false,
+    Callback = function(_661) end,
+})
+
+local _call663 = _call420:AddRightGroupbox('ESP', 'eye')
+
+_call663:AddToggle('ZombieESP', {
+    Text = 'Zombie ESP',
+    Default = false,
+    Callback = function(_666) end,
+})
+_call663:AddToggle('PlayerESP', {
+    Text = 'Player ESP',
+    Default = false,
+    Callback = function(_669) end,
+})
+
+local _call671 = _call420:AddRightGroupbox('Character', 'user')
+
+_call671:AddSlider('WalkSpeed', {
+    Min = 16,
+    Default = 16,
+    Max = 300,
+    Text = 'Walk Speed',
+    Callback = function(_674) end,
+    Rounding = 0,
+})
+_call671:AddButton({
+    Func = function() end,
+    Text = 'Reset Walk Speed',
+})
+_call671:AddSlider('FOV', {
+    Min = 10,
+    Default = 70,
+    Max = 120,
+    Text = 'Field of View',
+    Callback = function(_680) end,
+    Rounding = 0,
+})
+_call671:AddButton({
+    Func = function() end,
+    Text = 'Reset FOV',
+})
+_call671:AddButton({
+    Func = function() end,
+    Text = 'Teleport to Middle Arena',
+})
+_call671:AddButton({
+    Func = function() end,
+    Text = 'TP Safe Zone High',
+})
+_call671:AddButton({
+    Func = function() end,
+    Text = 'TP Safe Zone Ground',
+})
+
+local _call694 = _call422:AddLeftGroupbox('Movement', 'run')
+
+_call694:AddToggle('NoClip', {
+    Text = 'No Clip',
+    Default = false,
+    Callback = function(_697) end,
+})
+_call694:AddToggle('InfJump', {
+    Text = 'Infinite Jump',
+    Default = false,
+    Callback = function(_700) end,
+})
+
+local _call702 = _call422:AddLeftGroupbox('Fly', 'wind')
+
+_call702:AddSlider('FlySpeed', {
+    Min = 10,
+    Default = 50,
+    Max = 300,
+    Text = 'Fly Speed',
+    Callback = function(_705) end,
+    Rounding = 0,
+})
+_call702:AddToggle('FlyEnabled', {
+    Text = 'Enable Fly (WASD + Q/E)',
+    Default = false,
+    Callback = function(_708) end,
+})
+
+local _call710 = _call422:AddRightGroupbox('Utility', 'zap')
+
+_call710:AddToggle('AntiAFK', {
+    Text = 'Anti AFK',
+    Default = false,
+    Callback = function(_713) end,
+})
+_call710:AddToggle('AntiGameplayPause', {
+    Text = 'Anti Gameplay Pause',
+    Default = false,
+    Callback = function(_716) end,
+})
+
+local _call718 = _call422:AddRightGroupbox('Performance', 'gauge')
+
+_call718:AddToggle('AntiLag', {
+    Text = 'Anti Lag',
+    Default = false,
+    Callback = function(_721) end,
+})
+_call718:AddToggle('Disable3D', {
+    Text = 'Disable 3D Rendering',
+    Default = false,
+    Callback = function(_724) end,
+})
+_call718:AddToggle('RemoveFog', {
+    Text = 'Remove Fog',
+    Default = false,
+    Callback = function(_727) end,
+})
+_call718:AddToggle('BlackScreen', {
+    Text = 'Black Screen',
+    Default = false,
+    Callback = function(_730) end,
+})
+
+local _call732 = _call424:AddLeftGroupbox('Server Information', 'server')
+
+_call732:AddLabel('Server ID: ' .. game.JobId)
+task.spawn(function() end)
+_call732:AddButton({
+    Func = function() end,
+    Text = 'Copy Server ID',
+})
+
+local _call744 = _call424:AddLeftGroupbox('Server Actions', 'refresh-cw')
+
+_call744:AddButton({
+    Func = function() end,
+    Text = 'Rejoin Server',
+})
+_call744:AddButton({
+    Func = function() end,
+    Text = 'Switch Server (Random)',
+})
+_call744:AddButton({
+    Func = function() end,
+    Text = 'Switch Server (Least Players)',
+})
+
+local _call755 = _call424:AddLeftGroupbox('Auto Server Hop', 'refresh-cw')
+
+_call755:AddSlider('AutoHopInterval', {
+    Min = 3,
+    Default = 5,
+    Max = 60,
+    Text = 'Hop Interval (seconds)',
+    Callback = function(_758) end,
+    Rounding = 0,
+})
+_call755:AddToggle('AutoHop', {
+    Text = 'Auto Hop (Random)',
+    Default = false,
+    Callback = function(_761) end,
+})
+_call424:AddRightGroupbox('Join Server', 'log-in'):AddInput('JoinServerId', {
+    Text = 'Server ID',
+    Default = '',
+    Callback = function(_766) end,
+})
+
+local _call768 = _call424:AddRightGroupbox('Best Wave Finder', 'search')
+
+_call768:AddInput('TargetWave', {
+    Text = 'Target Wave',
+    Default = '10',
+    Callback = function(_771) end,
+})
+_call768:AddToggle('AutoFindBestWave', {
+    Text = 'Auto Find Best Wave',
+    Default = false,
+    Callback = function(_774) end,
+})
+
+local _call776 = _call426:AddLeftGroupbox('Menu Settings', 'wrench')
+
+_call776:AddToggle('KeybindMenuOpen', {
+    Text = 'Open Keybind Menu',
+    Default = false,
+    Callback = function(_779) end,
+})
+_call776:AddToggle('ShowCustomCursor', {
+    Text = 'Custom Cursor',
+    Default = true,
+    Callback = function(_782) end,
+})
+_call776:AddDropdown('NotificationSide', {
+    Callback = function(_785) end,
+    Text = 'Notification Side',
+    Values = {
+        [1] = 'Left',
+        [2] = 'Right',
+    },
+    Default = 'Right',
+})
+_call776:AddDivider()
+_call776:AddLabel('Menu Bind').AddKeyPicker(_call776:AddLabel('Menu Bind'), 'MenuKeybind', {
+    NoUI = true,
+    Default = 'RightShift',
+    Text = 'Menu Keybind',
+})
+_call776:AddButton({
+    Func = function() end,
+    Text = 'Unload',
+})
+
+_5.ToggleKeybind = _5.Options.MenuKeybind
+
+_13:SetLibrary(_5)
+_9:SetLibrary(_5)
+_9:IgnoreThemeSettings()
+_9:SetIgnoreIndexes({
+    [1] = 'MenuKeybind',
+})
+_13:SetFolder('CyraaHub/SurviveZombieArena')
+_9:SetFolder('CyraaHub/SurviveZombieArena')
+_9:BuildConfigSection(_call426)
+_13:ApplyToTab(_call426)
+_9:LoadAutoloadConfig()
+
+local _Scheme818 = _5.Scheme
+
+_Scheme818.AccentColor = Color3.fromRGB(0, 255, 33)
+
+_5:UpdateColorsUsingRegistry()
+_LocalPlayer43.CharacterAdded.Connect(_LocalPlayer43.CharacterAdded, function() end)
+_5:Notify('Cyraa Hub loaded successfully!\nMade by cyraajaaaa')
+print('made by komtolmmek2 script')
