@@ -1,0 +1,22 @@
+if game.PlaceId ~= 6961824067 then
+    game.Players.LocalPlayer:Kick("지원하지 않는 게임입니다.")
+    return
+end
+
+local executor = identifyexecutor and identifyexecutor() or tostring(getexecutorname and getexecutorname() or "")
+local allowed = {"Delta", "Xeno", "real"}
+local passed = false
+
+for _, name in ipairs(allowed) do
+    if string.find(string.lower(executor), string.lower(name)) then
+        passed = true
+        break
+    end
+end
+
+if not passed then
+    game.Players.LocalPlayer:Kick("허용되지 않은 실행기입니다.")
+    return
+end
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/qwerqwerg1u/RRTS/main/키시스템"))()
