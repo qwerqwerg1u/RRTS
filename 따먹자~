@@ -1,0 +1,275 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "야동허브",
+   LoadingTitle = "스크립트 불러오는 중...",
+   LoadingSubtitle = "Rayfield UI",
+   ConfigurationSaving = {
+      Enabled = false
+   }
+})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TextChatService = game:GetService("TextChatService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+
+local jerkAnimationTrack = nil
+local jerkActive = false
+
+local DDTab = Window:CreateTab("자위", 4483362458)
+
+DDTab:CreateToggle({
+    Name = "딸딸이 <font color='rgb(25,255,0)'>[자위마스터]</font>",
+    CurrentValue = false,
+    Flag = "JerkMotionToggle",
+    Callback = function(Value)
+        jerkActive = Value
+
+        local character = LocalPlayer.Character
+        if not character then return end
+
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+
+        local animator = humanoid:FindFirstChildOfClass("Animator") or Instance.new("Animator", humanoid)
+
+        if jerkActive then
+            if not jerkAnimationTrack then
+                local animation = Instance.new("Animation")
+                animation.AnimationId = "rbxassetid://168268306"
+                jerkAnimationTrack = animator:LoadAnimation(animation)
+            end
+
+            jerkAnimationTrack:Play()
+            task.wait(0.3)
+
+            task.spawn(function()
+                while jerkActive and jerkAnimationTrack and jerkAnimationTrack.IsPlaying do
+                    jerkAnimationTrack.TimePosition = 0.3
+                    task.wait(0.1)
+                end
+            end)
+        else
+            if jerkAnimationTrack then
+                jerkAnimationTrack:Stop()
+            end
+        end
+    end
+})
+
+
+local SexTab = Window:CreateTab("섹스", 4483362458)
+
+local selectedTargetName = nil
+local bangActive = false
+local bangSpeed = 20
+local bangDistance = 1.0
+local bangPitch = 15
+
+local function GetPlayerNames()
+    local playerList = {}
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            table.insert(playerList, plr.Name)
+        end
+    end
+    return playerList
+end
+
+SexTab:CreateSection("강간 설정")
+
+local PlayerDropdown = SexTab:CreateDropdown({
+    Name = "강간 대상",
+    Options = GetPlayerNames(),
+    CurrentOption = {},
+    MultipleOptions = false,
+    Flag = "TargetPlayerDropdown",
+    Callback = function(Option)
+        if type(Option) == "table" then
+            selectedTargetName = Option[1]
+        else
+            selectedTargetName = Option
+        end
+    end
+})
+
+SexTab:CreateButton({
+    Name = "플레이어 목록 새로고침",
+    Callback = function()
+        PlayerDropdown:Refresh(GetPlayerNames())
+    end
+})
+
+SexTab:CreateSlider({
+    Name = "속도 (Frequency)",
+    Range = {5, 50},
+    Increment = 1,
+    Suffix = "속도",
+    CurrentValue = 20,
+    Flag = "BangSpeedSlider",
+    Callback = function(Value)
+        bangSpeed = Value
+    end
+})
+
+SexTab:CreateSlider({
+    Name = "밀착 거리 (Base Offset)",
+    Range = {0, 30},
+    Increment = 1,
+    Suffix = "거리",
+    CurrentValue = 10,
+    Flag = "BangDistanceSlider",
+    Callback = function(Value)
+        bangDistance = Value / 10
+    end
+})
+
+SexTab:CreateSlider({
+    Name = "허리 기울기 각도",
+    Range = {-45, 45},
+    Increment = 1,
+    Suffix = "도",
+    CurrentValue = 15,
+    Flag = "BangPitchSlider",
+    Callback = function(Value)
+        bangPitch = Value
+    end
+})
+
+SexTab:CreateToggle({
+    Name = "강간",
+    CurrentValue = false,
+    Flag = "BangToggle",
+    Callback = function(Value)
+        bangActive = Value
+
+        if bangActive then
+            if not selectedTargetName then
+                Rayfield:Notify({
+                    Title = "오류",
+                    Content = "먼저 강간할 플레이어를 선택해주세요!",
+                    Duration = 3,
+                    Image = 4483362458,
+                })
+                bangActive = false
+                return
+            end
+
+            task.spawn(function()
+                local step = 0
+                while bangActive do
+                    local character = LocalPlayer.Character
+                    local targetPlayer = Players:FindFirstChild(selectedTargetName)
+
+                    if character and targetPlayer and targetPlayer.Character then
+                        local rootPart = character:FindFirstChild("HumanoidRootPart")
+                        local targetRoot = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+                        if rootPart and targetRoot then
+                            step = step + (bangSpeed * 0.05)
+                            
+                            local pushMotion = math.sin(step) * 0.8
+                            local verticalMotion = math.abs(math.sin(step)) * 0.15
+                            local pitchAngle = math.rad(-bangPitch + (pushMotion * 5))
+
+                            local offsetZ = bangDistance + pushMotion
+                            
+                            local targetCFrame = targetRoot.CFrame 
+                                * CFrame.new(0, verticalMotion, offsetZ) 
+                                * CFrame.Angles(pitchAngle, 0, 0)
+
+                            rootPart.CFrame = targetCFrame
+                        end
+                    end
+                    RunService.Heartbeat:Wait()
+                end
+            end)
+        end
+    end
+})
+
+
+SexTab:CreateSection("자동 채팅")
+
+local autoChatActive = false
+local autoChatDelay = 3
+local selectedChatList = {}
+
+local wordOptions = {
+    "(탁탁탁)",
+    "맛있..다♡!",
+    "울컥울컥",
+    "♡",
+    "아흣",
+    "하아..",
+    "영차영차",
+    "맛집이네!!!",
+    "우와아!!!",
+    "따흑ㅠ"
+}
+
+local function SendChatMessage(msg)
+    pcall(function()
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local textChannel = TextChatService.TextChannels.RBXGeneral
+            if textChannel then
+                textChannel:SendAsync(msg)
+            end
+        else
+            ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+        end
+    end)
+end
+
+SexTab:CreateDropdown({
+    Name = "고아리스트",
+    Options = wordOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "GoaListDropdown",
+    Callback = function(Option)
+        selectedChatList = Option
+    end
+})
+
+SexTab:CreateSlider({
+    Name = "자동 채팅 간격",
+    Range = {2, 15},
+    Increment = 1,
+    Suffix = "초",
+    CurrentValue = 3,
+    Flag = "AutoChatDelaySlider",
+    Callback = function(Value)
+        autoChatDelay = Value
+    end
+})
+
+SexTab:CreateToggle({
+    Name = "자동 채팅(챗정주의)",
+    CurrentValue = false,
+    Flag = "AutoChatToggle",
+    Callback = function(Value)
+        autoChatActive = Value
+
+        if autoChatActive then
+            task.spawn(function()
+                local index = 1
+                while autoChatActive do
+                    if #selectedChatList > 0 then
+                        if index > #selectedChatList then
+                            index = 1
+                        end
+                        
+                        local msg = selectedChatList[index]
+                        SendChatMessage(msg)
+                        
+                        index = index + 1
+                    end
+                    task.wait(autoChatDelay)
+                end
+            end)
+        end
+    end
+})
