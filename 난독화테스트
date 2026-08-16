@@ -1,0 +1,65 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Paca Hub",
+   LoadingTitle = "Paca Script Executing...",
+   LoadingSubtitle = "by Paca",
+   ConfigurationSaving = {
+      Enabled = false,
+   },
+   KeySystem = false
+})
+
+local MainTab = Window:CreateTab("기능 설정", 4483362458)
+
+MainTab:CreateSection("플레이어 강화")
+
+MainTab:CreateSlider({
+   Name = "이동 속도 (WalkSpeed)",
+   Range = {16, 200},
+   Increment = 1,
+   Suffix = " Speed",
+   CurrentValue = 16,
+   Flag = "SpeedSlider",
+   Callback = function(Value)
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.WalkSpeed = Value
+      end
+   end,
+})
+
+MainTab:CreateSlider({
+   Name = "점프력 (JumpPower)",
+   Range = {50, 300},
+   Increment = 5,
+   Suffix = " Power",
+   CurrentValue = 50,
+   Flag = "JumpSlider",
+   Callback = function(Value)
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.UseJumpPower = true
+         char.Humanoid.JumpPower = Value
+      end
+   end,
+})
+
+MainTab:CreateSection("유틸리티")
+
+MainTab:CreateButton({
+   Name = "캐릭터 리셋",
+   Callback = function()
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.Health = 0
+      end
+   end,
+})
+
+Rayfield:Notify({
+   Title = "Paca Hub 로드 완료",
+   Content = "메뉴가 성공적으로 불러와졌습니다.",
+   Duration = 3,
+   Image = 4483362458,
+})
