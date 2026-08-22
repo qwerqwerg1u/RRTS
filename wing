@@ -873,4 +873,12 @@ WTab:AddSlider({
 		waveIntensity = Value / 20
 	end    
 })
+local Players = game:GetService("Players")
 
+local player = Players.LocalPlayer
+player.CameraMode = Enum.CameraMode.Classic
+
+player.CameraMinZoomDistance = 0.5
+player.CameraMaxZoomDistance = 20000
+
+print("3인칭 잠금해제 되어있으니 참고하세용")
