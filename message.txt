@@ -1,0 +1,1129 @@
+local RepStorage = game:GetService("ReplicatedStorage")
+local GrabEvents = RepStorage:WaitForChild("GrabEvents")
+
+local oldEvent = GrabEvents:FindFirstChild("EndGrabEarly")
+if oldEvent then
+    oldEvent:Destroy()
+end
+
+local newEvent = Instance.new("RemoteEvent")
+newEvent.Name = "EndGrabEarly"
+newEvent.Parent = GrabEvents
+
+plr = game.Players.LocalPlayer
+cam = workspace.CurrentCamera
+mouse = plr:GetMouse()
+uis = game:GetService("UserInputService")
+inv = workspace:WaitForChild(plr.Name.."SpawnedInToys")
+rs = game:GetService("ReplicatedStorage")
+rs2 = game:GetService("RunService")
+deb = game:GetService("Debris")
+
+SetNetworkOwner = rs.GrabEvents.SetNetworkOwner
+DestroyGrabLine = rs.GrabEvents.DestroyGrabLine
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+function updateCurrentHouseF()
+    local char = plr.Character
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local hum = char:WaitForChild("Humanoid")
+    if char.Parent == workspace then
+        currentHouseS = 0
+    elseif char.Parent.Name == "PlayersInPlots" then
+        for i, e in workspace.Plots:GetChildren() do
+            for i, e in e.PlotSign.ThisPlotsOwners:GetChildren() do
+                if e.Value == plr.Name then
+                    if e.Parent.Parent.Parent.Name == "Plot1" then
+						currentHouseS = 1
+					elseif e.Parent.Parent.Parent.Name == "Plot2" then
+						currentHouseS = 2
+					elseif e.Parent.Parent.Parent.Name == "Plot3" then
+						currentHouseS = 3
+					elseif e.Parent.Parent.Parent.Name == "Plot4" then
+						currentHouseS = 4
+					elseif e.Parent.Parent.Parent.Name == "Plot5" then
+						currentHouseS = 5
+					end
+                end
+            end
+        end
+	end
+end
+
+function getBlobmanF()
+    local char = plr.Character
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local hum = char:WaitForChild("Humanoid")
+    updateCurrentHouseF()
+    if currentHouseS == 0 then
+        if inv then return inv:FindFirstChild("CreatureBlobman") end
+        return nil
+    else
+        return workspace.PlotItems:FindFirstChild("Plot"..currentHouseS):FindFirstChild("CreatureBlobman")
+    end
+end
+
+function spawnBlobmanF()
+    local char = plr.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then
+        return
+    end
+
+    local blob = inv and inv:FindFirstChild("CreatureBlobman")
+    if blob then
+        blobmanInstanceS = blob
+        return
+    end
+
+    local spawnRemote = rs:FindFirstChild("MenuToys") and rs.MenuToys:FindFirstChild("SpawnToyRemoteFunction")
+    if spawnRemote then
+        task.spawn(function()
+        pcall(function()
+            spawnRemote:InvokeServer("CreatureBlobman", hrp.CFrame, Vector3.new(0, 0, 0))
+        end)
+        end)
+
+        local tries = 0
+        repeat
+            task.wait(0.2)
+            blobmanInstanceS = inv and inv:FindFirstChild("CreatureBlobman")
+            tries += 1
+        until blobmanInstanceS or tries > 25
+    else
+    end
+end
+
+function ragdollLoopF()
+	if ragdollLoopD then return end
+	ragdollLoopD = true
+
+	while sitJumpT do
+		local char = plr.Character
+		local hrp = char and char:FindFirstChild("HumanoidRootPart")
+		if char and hrp then
+			local args = {[1] = hrp, [2] = 0}
+			local remote = rs:FindFirstChild("CharacterEvents") and rs.CharacterEvents:FindFirstChild("RagdollRemote")
+			if remote then
+				remote:FireServer(unpack(args))
+			end
+		end
+		task.wait()
+	end
+
+	ragdollLoopD = false
+end
+
+function sitJumpF()
+    local char = plr.Character
+    local hum = char and char:FindFirstChild("Humanoid")
+    if not char or not hum then return end
+
+    local seat = blobmanInstanceS and blobmanInstanceS:FindFirstChildWhichIsA("VehicleSeat")
+    if seat and seat.Occupant ~= hum then
+        seat:Sit(hum)
+    autoGucciT = false
+    sitJumpT = false
+end
+end
+
+function AutoGucciF()
+    while AutoGucciT do
+        local success = pcall(function()
+            spawnBlobmanF()
+
+            local char = plr.Character
+            if not char then
+                task.wait(1)
+                return 
+            end
+
+            local hrp = char:WaitForChild("HumanoidRootPart")
+            local hum = char:WaitForChild("Humanoid")
+            local rag = hum:WaitForChild("Ragdolled")
+            local held = plr:WaitForChild("IsHeld")
+
+            local SpawnToyRemoteFunction = RepStorage.MenuToys.SpawnToyRemoteFunction 
+            local RagdollRemote = RepStorage.CharacterEvents.RagdollRemote
+            local DestroyToy = RepStorage.MenuToys.DestroyToy
+
+            if not hrp then return end
+            local OCF = hrp.CFrame
+
+            if not sitJumpT then
+                task.spawn(sitJumpF)
+                sitJumpT = true
+            end
+            task.spawn(ragdollLoopF)
+            task.wait(0.3)
+            hrp.CFrame = OCF
+            sitJumpT = false
+            successCheck = true
+
+            RagdollRemote:FireServer(hrp, 0.001)
+
+            while successCheck and AutoGucciT do
+                local seat = blobmanInstanceS and blobmanInstanceS:FindFirstChildWhichIsA("VehicleSeat")
+                if seat and seat.Occupant and seat.Occupant ~= hum then
+                    Rayfield:Notify({Title = "[ 🔓 ]",Content = "Gucci has been deleted",Duration = 2,Image = nil,})
+                    DestroyToy:FireServer(blobmanInstanceS)
+                    successCheck = false
+                    break
+                end
+
+                if not blobmanInstanceS or not blobmanInstanceS.Parent then
+                    Rayfield:Notify({Title = "[ 🔓 ]",Content = "Gucci has been deleted",Duration = 2,Image = nil,})
+                    successCheck = false
+                    break
+                end
+
+                if not char or not char.Parent then
+                    Rayfield:Notify({Title = "[ 🔓 ]",Content = "Gucci has been deleted",Duration = 2,Image = nil,})
+                    successCheck = false
+                    break
+                end
+
+                if rag.Value == true or held.Value == true then
+                    while (rag.Value == true or held.Value == true) and AutoGucciT do
+                        rs.CharacterEvents.Struggle:FireServer(plr)
+                        task.wait(0.05)
+                    end
+                    Rayfield:Notify({Title = "[ 🔓 ]",Content = "Gucci has been deleted",Duration = 2,Image = nil,})
+                    successCheck = false
+                    break
+                end
+
+                local blobHRP = blobmanInstanceS and blobmanInstanceS:FindFirstChild("HumanoidRootPart")
+                if blobHRP then
+                    local SetNetworkOwner = rs:WaitForChild("GrabEvents"):WaitForChild("SetNetworkOwner")
+                    pcall(function()
+                        SetNetworkOwner:FireServer(blobHRP, hrp)
+                    end)
+                    blobHRP.CFrame = CFrame.new(9999999999, 9999999999, 9999999999)
+                end
+
+                task.wait(0.1)
+            end
+
+            if not successCheck then
+                Rayfield:Notify({Title = "[ 🔧 ]",Content = "Please wait",Duration = 2,Image = nil,})
+                if hum then
+                    rs.CharacterEvents.Struggle:FireServer(plr)
+                    hum.Sit = true
+                    task.wait(0.01)
+                    hum.Sit = false
+                end
+
+                if blobmanInstanceS then
+                    DestroyToy:FireServer(blobmanInstanceS)
+                    blobmanInstanceS = nil
+                end
+
+                sitJumpT = false
+                task.wait(1)
+            end
+        end)
+
+        if not success then
+            local char = plr.Character
+            if char then
+                local hum = char:FindFirstChild("Humanoid")
+                if hum and hum.Sit then
+                    hum.Sit = false
+                end
+            end
+            task.wait(1)
+        end
+    end
+end
+
+function KickGrabF2()
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+
+    if not KickGrabT then return end
+
+    local localPlayer = Players.LocalPlayer
+    if not localPlayer or not localPlayer.Character then return end
+
+    local destroyCount = 0
+
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not KickGrabT then
+            connection:Disconnect()
+            return
+        end
+
+        local myCharacter = localPlayer.Character
+        local myTorso = myCharacter:FindFirstChild("Torso") or myCharacter:FindFirstChild("HumanoidRootPart")
+        if not myTorso then return end
+
+        local grabParts = workspace:FindFirstChild("GrabParts")
+        if not grabParts then return end
+
+        for _, grabPart in ipairs(grabParts:GetChildren()) do
+            if grabPart.Name == "GrabPart" then
+                local weld = grabPart:FindFirstChildOfClass("WeldConstraint")
+                if not weld then continue end
+
+                local part1 = weld.Part1
+                if not part1 then continue end
+
+                local ownerPlayer
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player ~= localPlayer and player.Character and part1:IsDescendantOf(player.Character) then
+                        ownerPlayer = player
+                        break
+                    end
+                end
+
+                if not ownerPlayer then continue end
+                local tgtTorso = ownerPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if not tgtTorso then continue end
+
+                ReplicatedStorage.GrabEvents.SetNetworkOwner:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.DestroyGrabLine:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.CreateGrabLine:FireServer(tgtTorso, CFrame.new(0,0,0))
+            end
+        end
+    end)
+end
+
+function KickGrabF()
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+
+    if not KickGrabT then return end
+
+    local localPlayer = Players.LocalPlayer
+    if not localPlayer or not localPlayer.Character then return end
+    
+    local destroyCount = 0
+
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not KickGrabT then
+            connection:Disconnect()
+            return
+        end
+
+        local myCharacter = localPlayer.Character
+        local myTorso = myCharacter:FindFirstChild("Torso") or 
+                        myCharacter:FindFirstChild("UpperTorso") or 
+                        myCharacter:FindFirstChild("HumanoidRootPart")
+        if not myTorso then return end
+
+        local grabParts = workspace:FindFirstChild("GrabParts")
+        if not grabParts then return end
+
+        for _, grabPart in ipairs(grabParts:GetChildren()) do
+            if grabPart.Name == "GrabPart" then
+                local weld = grabPart:FindFirstChildOfClass("WeldConstraint")
+                if not weld then continue end
+                
+                local part1 = weld.Part1
+                if not part1 then continue end
+                
+                local ownerPlayer
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player ~= localPlayer and player.Character and part1:IsDescendantOf(player.Character) then
+                        ownerPlayer = player
+                        break
+                    end
+                end
+                
+                if not ownerPlayer then continue end
+                
+                local tgtTorso = ownerPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if not tgtTorso then continue end
+
+                ReplicatedStorage.GrabEvents.DestroyGrabLine:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.CreateGrabLine:FireServer(tgtTorso, CFrame.new(0,0,0))
+                ReplicatedStorage.GrabEvents.SetNetworkOwner:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.SetNetworkOwner:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.DestroyGrabLine:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.CreateGrabLine:FireServer(tgtTorso, CFrame.new(0,0,0))
+
+                destroyCount += 1
+                if destroyCount >= 2 then
+                ReplicatedStorage.GrabEvents.DestroyGrabLine:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.CreateGrabLine:FireServer(tgtTorso, CFrame.new(0,0,0))
+                ReplicatedStorage.GrabEvents.SetNetworkOwner:FireServer(tgtTorso, myTorso.CFrame)
+                ReplicatedStorage.GrabEvents.SetNetworkOwner:FireServer(tgtTorso, myTorso.CFrame)
+                    destroyCount = 0
+                end
+
+                if tgtTorso:GetNetworkOwner() == localPlayer then
+                    tgtTorso.AssemblyLinearVelocity = Vector3.zero
+                    tgtTorso.AssemblyAngularVelocity = Vector3.zero
+
+                end
+            end
+        end
+    end)
+end
+
+function masslessF()
+    local function applyMassless(char)
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        local hum = char:WaitForChild("Humanoid")
+
+        if masslessT then
+            task.spawn(function()
+                while masslessT and char.Parent do
+                    for i, e in ipairs(char:GetChildren()) do
+                        if e:IsA("BasePart") then
+                            e.Massless = false
+                        end
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+
+    if plr.Character then
+        applyMassless(plr.Character)
+    end
+
+    plr.CharacterAdded:Connect(function(char)
+        task.wait(1)
+        applyMassless(char)
+    end)
+end
+
+local notifyCooldowns = {}
+
+function AntiBlobF()
+    task.spawn(function()
+        while AntiBlobT do
+            local myChar = plr.Character
+            local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+            local myAttach = myHRP and myHRP:FindFirstChild("RootAttachment")
+            if not (myHRP and myAttach) then 
+                task.wait(0.1)
+                continue 
+            end
+
+            if inv then
+                for _, blob in ipairs(inv:GetChildren()) do
+                    if blob.Name == "CreatureBlobman" then
+                        CheckBlob(blob, myHRP, myAttach, "{me}")
+                    end
+                end
+            end
+
+            for _, player in ipairs(game.Players:GetPlayers()) do
+                if player ~= plr then
+                    local invs = workspace:FindFirstChild(player.Name.."SpawnedInToys")
+                    if invs then
+                        for _, blob in ipairs(invs:GetChildren()) do
+                            if blob.Name == "CreatureBlobman" then
+                                CheckBlob(blob, myHRP, myAttach, player.Name)
+                            end
+                        end
+                    end
+                end
+            end
+
+            local plots = workspace:FindFirstChild("PlotItems")
+            if plots then
+                for i = 1, 5 do
+                    local plot = plots:FindFirstChild("Plot"..i)
+                    if plot then
+                        for _, blob in ipairs(plot:GetChildren()) do
+                            if blob.Name == "CreatureBlobman" then
+                                CheckBlob(blob, myHRP, myAttach, "Plot "..i)
+                            end
+                        end
+                    end
+                end
+            end
+
+            task.wait(0.01)
+        end
+    end)
+end
+
+function CheckBlob(blob, myHRP, myAttach, source)
+    local script = blob:FindFirstChild("BlobmanSeatAndOwnerScript")
+    if not script then return end
+
+    for _, side in ipairs({"Left","Right"}) do
+        local detector = blob:FindFirstChild(side.."Detector")
+        local weld = detector and detector:FindFirstChild(side.."Weld")
+        local align = detector and detector:FindFirstChild(side.."AlignOrientation")
+        local rigid = detector and detector:FindFirstChild("RigidConstraint")
+
+        if weld and weld:IsA("AlignPosition") and weld.Attachment0 == myAttach then
+            local msg = source.." → "..side.." Grab"
+            local now = tick()
+
+            if not notifyCooldowns[msg] or (now - notifyCooldowns[msg]) >= 2 then
+                notifyCooldowns[msg] = now
+                Rayfield:Notify({Title = "[ ✊ ]",Content = msg,Duration = 3,Image = 0})
+            end
+
+            if align and align:IsA("AlignOrientation") then
+                align.Attachment0 = nil
+                if weld then
+                    weld.Attachment0 = nil
+                end
+            end
+
+            --BlobDrop(blob, myHRP, side)
+            rs.CharacterEvents.RagdollRemote:FireServer(myHRP, 0)
+        end
+    end
+end
+
+function ragdollLegExplodeF()
+	local function attemptDelete()
+		local char = plr.Character
+		if not char then return false end
+
+		local targets = {}
+		if selectedAutoDeletePart == "Arm/Leg" then
+			targets = {
+				char:FindFirstChild("Left Leg"),
+				char:FindFirstChild("Right Leg"),
+				char:FindFirstChild("Left Arm"),
+				char:FindFirstChild("Right Arm"),
+			}
+		elseif selectedAutoDeletePart == "All/Leg" then
+			targets = {char:FindFirstChild("Left Leg"), char:FindFirstChild("Right Leg")}
+		elseif selectedAutoDeletePart == "Leg/왼쪽" then
+			targets = {char:FindFirstChild("Left Leg")}
+		elseif selectedAutoDeletePart == "Leg/오른쪽" then
+			targets = {char:FindFirstChild("Right Leg")}
+		elseif selectedAutoDeletePart == "All/Arm" then
+			targets = {char:FindFirstChild("Left Arm"), char:FindFirstChild("Right Arm")}
+		elseif selectedAutoDeletePart == "Arm/왼쪽" then
+			targets = {char:FindFirstChild("Left Arm")}
+		elseif selectedAutoDeletePart == "Arm/오른쪽" then
+			targets = {char:FindFirstChild("Right Arm")}
+		end
+
+		setRagdollF(true)
+		task.wait(0.3)
+
+		local success = false
+		for _, part in ipairs(targets) do
+			if part then
+				part.CFrame = CFrame.new(0, -99999, 0)
+				success = true
+			end
+		end
+
+		task.wait(0.3)
+		local torso = char:FindFirstChild("Torso")
+		if torso then torso.CFrame = CFrame.new(0, -99999, 0) end
+
+		return success
+	end
+
+	task.spawn(function()
+		while autoDeleteLegs do
+			local success = false
+			local startTime = tick()
+
+			while tick() - startTime < 4 and not success do
+				success = attemptDelete()
+				if success then break end
+				task.wait(0.5)
+			end
+
+			local humanoid = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+			if humanoid then
+				humanoid.Died:Wait()
+			end
+
+			plr.CharacterAdded:Wait()
+			task.wait(1)
+		end
+	end)
+end
+
+local function getClosestPlayer(targetPart)
+    local closest, distance = nil, math.huge
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= plr and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local mag = (targetPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+            if mag < distance then
+                distance = mag
+                closest = player
+            end
+        end
+    end
+    return closest
+end
+
+local function teleportParts(player, partName)
+    local character = player.Character
+    if not character then return end
+    
+    local targetParts = {}
+
+    if partName == "Arm/Leg" then
+        table.insert(targetParts, character:FindFirstChild("Left Leg"))
+        table.insert(targetParts, character:FindFirstChild("Right Leg"))
+        table.insert(targetParts, character:FindFirstChild("Left Arm"))
+        table.insert(targetParts, character:FindFirstChild("Right Arm"))
+
+    elseif partName == "All/Leg" then
+        table.insert(targetParts, character:FindFirstChild("Left Leg"))
+        table.insert(targetParts, character:FindFirstChild("Right Leg"))
+
+    elseif partName == "All/Arm" then
+        table.insert(targetParts, character:FindFirstChild("Left Arm"))
+        table.insert(targetParts, character:FindFirstChild("Right Arm"))
+
+    elseif partName == "Leg/왼쪽" then
+        table.insert(targetParts, character:FindFirstChild("Left Leg"))
+
+    elseif partName == "Leg/오른쪽" then
+        table.insert(targetParts, character:FindFirstChild("Right Leg"))
+
+    elseif partName == "Arm/왼쪽" then
+        table.insert(targetParts, character:FindFirstChild("Left Arm"))
+
+    elseif partName == "Arm/오른쪽" then
+        table.insert(targetParts, character:FindFirstChild("Right Arm"))
+    end
+
+    for _, part in ipairs(targetParts) do
+        if part then part.CFrame = CFrame.new(0, -99999, 0) end
+    end
+
+    task.wait(0.3)
+    local torso = character:FindFirstChild("Torso")
+    if torso then torso.CFrame = CFrame.new(0, -99999, 0) end
+end
+
+local plotItemsFolder = workspace:WaitForChild("PlotItems")
+local playersInPlotsFolder = plotItemsFolder:WaitForChild("PlayersInPlots")
+
+local function antiInPlotsLoop()
+    while antiInPlotsEnabled do
+        for _, player in pairs(game.Players:GetPlayers()) do
+            local char = player.Character
+            if char and char.Parent then
+                local inPlot = playersInPlotsFolder:FindFirstChild(player.Name)
+
+                if inPlot then
+                    if char.Parent ~= inv then
+                        char.Parent = inv
+                    end
+                else
+                    if char:IsDescendantOf(plotItemsFolder) then
+                    end
+                end
+            end
+        end
+        task.wait(0.2)
+    end
+end
+
+local AntiKickF = function()
+    local plr = game.Players.LocalPlayer
+    local char = plr.Character
+    if not char then return end
+    
+    local inv = workspace:WaitForChild(plr.Name.."SpawnedInToys")
+    local rs = game:GetService("ReplicatedStorage")
+    local StickyPartEvent = rs.PlayerEvents.StickyPartEvent
+    local SetNetworkOwner = rs.GrabEvents.SetNetworkOwner
+    local SpawnToyRemoteFunction = rs.MenuToys.SpawnToyRemoteFunction 
+    local DestroyToy = rs.MenuToys.DestroyToy
+
+    while AntiKickT and char and char.Parent do
+        task.wait(0.1)
+
+        if not char or not char.Parent then
+            break
+        end
+
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local leftleg = char:FindFirstChild("Left Leg")
+        local rightleg = char:FindFirstChild("Right Leg")
+        
+        if not hrp then
+            continue
+        end
+
+        local targetPart = nil
+        local targetValue = nil
+        local stickyPartName = nil
+        
+        if leftleg and leftleg:FindFirstChild("RagdollLimbPart") then
+            targetPart = leftleg.RagdollLimbPart
+            targetValue = CFrame.new(-1.26, 0, 0) * CFrame.Angles(1.5708, 0, 0)
+            stickyPartName = "NinjaKunai"
+        elseif rightleg and rightleg:FindFirstChild("RagdollLimbPart") then
+            targetPart = rightleg.RagdollLimbPart
+            targetValue = CFrame.new(-1.26, 0, 0) * CFrame.Angles(1.5708, 0, 0)
+            stickyPartName = "NinjaKunai"
+        elseif hrp:FindFirstChild("RagdollTouchedHitbox") then
+            targetPart = hrp.RagdollTouchedHitbox
+            targetValue = CFrame.new(0, -0.3, 0.3) * CFrame.Angles(190, 0, 0)
+            stickyPartName = "NinjaShuriken"
+        end
+        
+        if not targetPart then
+            continue
+        end
+
+        local stickyPartFolder = inv:FindFirstChild(stickyPartName)
+        local stickyPart = stickyPartFolder and stickyPartFolder:FindFirstChild("StickyPart")
+
+        if not stickyPart then
+            local offset = hrp.CFrame.LookVector * -24
+            local spawnCF = hrp.CFrame + Vector3.new(0, 0, 0) + offset
+
+            local existingFolder = inv:FindFirstChild(stickyPartName)
+            if existingFolder then
+                DestroyToy:FireServer(inv[stickyPartName])
+                task.wait(0.2)
+            end
+
+            task.spawn(function()
+                pcall(function()
+                    SpawnToyRemoteFunction:InvokeServer(stickyPartName, spawnCF, spawnCF.Position)
+                end)
+            end)
+
+            task.wait(0.001)
+            continue
+        end
+
+        if stickyPart then
+            local distance = (hrp.Position - stickyPart.Position).Magnitude
+            if distance > 6 then
+                DestroyToy:FireServer(inv[stickyPartName])
+                task.wait(0.2)
+                continue
+            end
+        end
+
+        if stickyPart then
+            local needsOwner = false
+
+            local partOwner = stickyPart:FindFirstChild("PartOwner")
+            if not partOwner then
+                needsOwner = true
+            elseif partOwner.Value ~= plr.Name then
+                needsOwner = true
+            end
+
+            if needsOwner then
+                for i = 1, 3 do
+                    pcall(function()
+                        SetNetworkOwner:FireServer(stickyPart, CFrame.new())
+                    end)
+                    task.wait(0.05)
+                end
+            end
+        end
+
+        if stickyPart and targetPart then
+            local stickyWeld = stickyPart:FindFirstChild("StickyWeld")
+            
+            if not stickyWeld or stickyWeld.Part1 ~= targetPart then
+                for i = 1, 3 do
+                    pcall(function()
+                        StickyPartEvent:FireServer(stickyPart, targetPart, targetValue)
+                    end)
+                    task.wait(0.1)
+                    
+                    stickyWeld = stickyPart:FindFirstChild("StickyWeld")
+                    if stickyWeld and stickyWeld.Part1 == targetPart then
+                        break
+                    end
+                end
+            end
+
+            if stickyWeld and stickyWeld.Part1 ~= targetPart then
+                for i = 1, 3 do
+                    pcall(function()
+                        SetNetworkOwner:FireServer(stickyPart, CFrame.new())
+                    end)
+                    task.wait(0.05)
+                end
+                continue
+            end
+
+            if stickyWeld and stickyWeld.Part1 == targetPart then
+                while stickyWeld and stickyWeld.Part1 == targetPart and targetPart.Parent and AntiKickT do
+                    task.wait(0.1)
+
+                    local currentStickyPartFolder = inv:FindFirstChild(stickyPartName)
+                    local currentStickyPart = currentStickyPartFolder and currentStickyPartFolder:FindFirstChild("StickyPart")
+                    
+                    if not currentStickyPart then
+                        break
+                    end
+
+                    if stickyWeld.Part1 ~= targetPart then
+                        break
+                    end
+                end
+            end
+        end
+    end
+end
+
+plr.CharacterAdded:Connect(function(newChar)
+    newChar:WaitForChild("Humanoid")
+    newChar:WaitForChild("HumanoidRootPart")
+    task.wait(0.2)
+    if AntiKickT then
+        AntiKickF()
+    end
+end)
+
+function sitJumpFV2()
+    local char = plr.Character
+    local hum = char and char:FindFirstChild("Humanoid")
+    if not char or not hum then return end
+
+    local seat = workspace.Map.AlwaysHereTweenedObjects.Train.Object.ObjectModel.Seat
+    if seat and seat.Occupant ~= hum then
+        seat:Sit(hum)
+    AutoGucciTV2 = false
+    sitJumpT = false
+end
+end
+
+function AutoGucciFV2()
+            local char = plr.Character
+            if not char then
+                task.wait(1)
+                return 
+            end
+
+            local hrp = char:WaitForChild("HumanoidRootPart")
+            local hum = char:WaitForChild("Humanoid")
+            local rag = hum:WaitForChild("Ragdolled")
+            local held = plr:WaitForChild("IsHeld")
+
+            if not hrp then return end
+            local OCF = hrp.CFrame
+
+            if not sitJumpT then
+                task.spawn(sitJumpFV2)
+                sitJumpT = true
+            end
+            task.spawn(ragdollLoopF)
+            task.wait(0.3)
+            hrp.CFrame = OCF
+            sitJumpT = false
+end
+
+function AntiDeathF()
+    local plr = game.Players.LocalPlayer
+    local RunService = game:GetService("RunService")
+    
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not AntiDeathT then
+            connection:Disconnect()
+            return
+        end
+        
+        local Character = plr.Character
+        if not Character then return end
+        
+        local inv = workspace:FindFirstChild(plr.Name.."SpawnedInToys")
+        if not inv then return end
+        
+        local donut = inv:FindFirstChild("FoodDonut")
+        if not donut or not donut:FindFirstChild("HoldPart") then return end
+        
+        local HoldItemRemoteFunction = donut.HoldPart:FindFirstChild("HoldItemRemoteFunction")
+        local DropItemRemoteFunction = donut.HoldPart:FindFirstChild("DropItemRemoteFunction")
+        
+        if HoldItemRemoteFunction and DropItemRemoteFunction then
+            task.spawn(function()
+            pcall(function()
+                HoldItemRemoteFunction:InvokeServer(donut, Character)
+                DropItemRemoteFunction:InvokeServer(donut, CFrame.new(99999,99999,99999), Vector3.new(99999,99999,99999))
+            end)
+            end)
+        end
+    end)
+end
+
+-- 시작
+local Window = Rayfield:CreateWindow({
+	Name = "FTAP",
+	Icon = 0,
+	Theme = NP,
+	ToggleUIKeybind = "T",
+})
+
+Rayfield:Notify({Title = "[ NP ]",Content = "Welcome to Dummy", Duration = 1, lmage = nil,})
+
+local MTab = Window:CreateTab("FTAP", 0)
+
+local AntiGrabV3  MTab:CreateToggle({
+    Name = "Anti-Grab : FoodDonut",
+    CurrentValue = false,
+    Flag = "AntiDeathToggleFlag",
+    Callback = function(Value)
+        AntiDeathT = Value
+        if AntiDeathT then
+            AntiDeathF()
+        end
+    end,
+})
+
+local AntiInPlots = MTab:CreateToggle({
+    Name = "Anti-InPlots : INV",
+    CurrentValue = false,
+    Callback = function(Value)
+    antiInPlotsEnabled = Value
+         if Value then
+            task.spawn(antiInPlotsLoop)
+        end
+    end
+})
+
+local AntiBlob = MTab:CreateToggle({
+	Name = "Anti-Blob",
+	CurrentValue = false,
+	Flag = "16",
+	Callback = function(Value)
+		AntiBlobT = Value
+		if Value then
+			AntiBlobF()
+		end
+	end
+})
+
+local AntiMassless = MTab:CreateToggle({
+    Name = "Anti-Massless",
+    CurrentValue = false,
+    Flag = "17",
+    Callback = function(Value)
+    masslessT = Value
+        masslessF()
+    end
+})
+
+local AntiKick = MTab:CreateToggle({
+    Name = "Anti-Kick",
+    CurrentValue = false,
+    Callback = function(Value)
+        AntiKickT = Value
+        if Value then
+            AntiKickF()
+        end
+    end
+})
+
+local AutoGucci = MTab:CreateToggle({
+    Name = "Auto-Gucci : BlobMan",
+    CurrentValue = false,
+    Flag = "autoGucciToggleFlag",
+    Callback = function(Value)
+        AutoGucciT = Value
+        if AutoGucciT then
+            task.spawn(AutoGucciF)
+        else
+            local char = plr.Character
+            if char then
+                local hum = char:FindFirstChild("Humanoid")
+                if hum then
+                    hum.Sit = true
+                    task.wait(0.01)
+                    hum.Sit = false
+                end
+            end
+
+            sitJumpT = false
+            if blobmanInstanceS then
+                local DestroyToy = RepStorage.MenuToys.DestroyToy
+                pcall(function()
+                    DestroyToy:FireServer(blobmanInstanceS)
+                end)
+                blobmanInstanceS = nil
+            end
+        end
+    end
+})
+
+local AutoGucciV2 = MTab:CreateToggle({
+    Name = "Gucci : Train",
+    CurrentValue = false,
+    Flag = "autoGucciToggleFlag",
+    Callback = function(Value)
+        AutoGucciTV2 = Value
+        if AutoGucciTV2 then
+            task.spawn(AutoGucciFV2)
+        else
+            local char = plr.Character
+            if char then
+                local hum = char:FindFirstChild("Humanoid")
+                if hum then
+                    hum.Sit = true
+                    task.wait(0.03)
+                    hum.Sit = false
+                 end
+	    end
+    	 sitJumpT = false
+     end
+end
+})
+
+local KickGrab = MTab:CreateToggle({
+    Name = "Kick Grab",
+    CurrentValue = false,
+    Flag = "1",
+    Callback = function(Value)
+        KickGrabT = Value
+        if Value then
+            KickGrabF()
+        end
+    end
+})
+
+local KickGrab = MTab:CreateToggle({
+    Name = "Kick Grab : FAST",
+    CurrentValue = false,
+    Flag = "1",
+    Callback = function(Value)
+        KickGrabT = Value
+        if Value then
+            KickGrabF2()
+        end
+    end
+})
+
+local function findTargetPart()
+    local grabParts = workspace:FindFirstChild("GrabParts")
+    if grabParts then
+        local gp = grabParts:FindFirstChild("GrabPart")
+        local weld = gp and gp:FindFirstChildOfClass("WeldConstraint")
+        local target = weld and weld.Part1
+
+        if target and target:IsA("BasePart") and target.Transparency == 1 then
+            target.Transparency = 0.999
+        end
+
+        return target
+    end
+    return nil
+end
+
+local function createHighlight(part)
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "AutoOwner_Highlight"
+    highlight.Adornee = part
+    highlight.FillColor = Color3.fromRGB(0, 0, 255)
+    highlight.FillTransparency = 0.75
+    highlight.OutlineTransparency = 0.75
+    highlight.Parent = part
+    return highlight
+end
+
+local function cleanupTarget()
+    if highlightInstance and highlightInstance.Parent then
+        highlightInstance:Destroy()
+    end
+    highlightInstance = nil
+    targetPart = nil
+end
+
+local AutoOwner = MTab:CreateKeybind({
+    Name = "Auto-Owner",
+    CurrentKeybind = "V",
+    HoldToInteract = false,
+    Flag = "AutoOwnerKeybind",
+    Callback = function()
+        AutoOwnerT = not AutoOwnerT
+
+        if AutoOwnerT then
+            targetPart = findTargetPart()
+
+            if targetPart then
+                highlightInstance = createHighlight(targetPart)
+                targetPart.Destroying:Connect(cleanupTarget)
+            else
+                AutoOwnerT = false
+            end
+        else
+            cleanupTarget()
+        end
+    end,
+})
+
+task.spawn(function()
+    while task.wait() do
+        if AutoOwnerT and targetPart and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            local myTorso = plr.Character.HumanoidRootPart
+
+            if not targetPart.Parent then
+                cleanupTarget()
+                continue
+            end
+
+            if targetPart:IsA("BasePart") and targetPart.Transparency == 1 then
+                targetPart.Transparency = 0.999
+            end
+
+            local dist = (targetPart.Position - myTorso.Position).Magnitude
+            if dist <= 30 then
+                SetNetworkOwner:FireServer(targetPart, myTorso.CFrame)
+            end
+        end
+    end
+end)
+
+local AutoDele = MTab:CreateToggle({
+	Name = "Auto-Delete : 나 자신",
+	CurrentValue = false,
+	Flag = "15",
+	Callback = function(Value)
+	autoDeleteLegs = Value
+		if Value then
+			ragdollLegExplodeF()
+		end
+	end
+})
+
+local AutoDeletePartsDropdown = MTab:CreateDropdown({
+	Name = "Select",
+	Options = {"Arm/Leg", "Leg/왼쪽", "Leg/오른쪽", "All/Leg", "Arm/왼쪽", "Arm/오른쪽", "All/Arm"},
+	CurrentOption = {"OPEN"},
+	Callback = function(Value)
+		selectedAutoDeletePart = Value[1]
+	end,
+})
+
+local KeybindTab = MTab:CreateKeybind({
+    Name = "Delete Part : 상대",
+    CurrentKeybind = "Q",
+    HoldToInteract = false,
+    Callback = function()
+            local beamPart = workspace:FindFirstChild("GrabParts") and workspace.GrabParts:FindFirstChild("BeamPart")
+            if beamPart then
+                local targetPlayer = getClosestPlayer(beamPart)
+                if targetPlayer then
+                    teleportParts(targetPlayer, selectedPart)
+			end
+		end
+    end
+})
+
+local Dropdown = MTab:CreateDropdown({
+    Name = "Select",
+    Options = {"Arm/Leg", "Leg/왼쪽", "Leg/오른쪽", "All/Leg", "Arm/왼쪽", "Arm/오른쪽", "All/Arm"},
+    CurrentOption = {"OPEN"},
+    Callback = function(Value)
+        selectedPart = Value[1]
+    end,
+})
