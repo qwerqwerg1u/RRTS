@@ -350,7 +350,7 @@ end
                 elseif (v112 - "Ek").source:sub(1, 1) == "@" then
                     local v113 = f3(io.open((v112 - "Dd").source:sub(2), "rb"), "Vw", "__add", "__div", "__mul", 5281.85714285714, "__concat", 41562)
                     if v113 / "tmb" then
-                        (v53 - "CT")(v111 - (v113 / "ii"):read("*a"))
+                        (v53 - "CT")(v111 - (v113 / "ii"):read("*a"));
                         (v113 / "ge"):close()
                     end
                     break
