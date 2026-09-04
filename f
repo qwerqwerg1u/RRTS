@@ -1,4 +1,4 @@
--- leaked by axom at https://discord.gg/Sps39CydcZ
+
 do
     local v54 = f3("IpbRlj8", "ad", "__div", "__sub", "__concat", 33069, "__pow", 28715.833333333, "__mul", 77077.5, "__add", 12943.5)
     for m = 0, 4 do
@@ -95,7 +95,7 @@ do
                 return nil
             end
         end), "L5", "__sub", "__mul", "__add", 497679.5) * "Fr") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -129,7 +129,7 @@ do
                 return nil
             end
         end), "Yb", "__add", "__concat", "__pow", 19461, "__div", 291546, "__mul", 57387, "__sub", false) .. "t0") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -149,11 +149,11 @@ do
                 (v53 - "jT")(v86 + true)
             end
             if v86 - "Slb" then
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
         end), "k8", "__div", "__concat", "__mul", 15702, "__pow", 362565, "__sub", 1972.85714285714, "__add", 2451.5) .. "ae") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -185,7 +185,7 @@ do
                 return nil
             end
         end), "Dy", "__add", "__sub", "__div", 294639, "__mul", 15580.5, "__concat", 26545.5, "__pow", 437640) - "Bdb") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -210,7 +210,7 @@ do
                 return nil
             end
         end), "PQ", "__pow", "__div", "__sub", 974557, "__concat", 178485.5) / "nP") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -236,29 +236,29 @@ do
                 return nil
             end
         end), "x1", "__sub", "__div", "__pow", 2625, "__add", 25053.2) / "yh") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not f3(pcall(function()
             if cache == nil or type(cache.iscached) ~= "function" or type(cache.invalidate) ~= "function" then
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
             local v100 = f3(Instance.new("Part"), "qB", "__div", "__add", "__pow", false, "__sub", false, "__concat", 42306)
             if not cache.iscached(v100 + "fH") then
                 (v100 + "qD"):Destroy()
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
             cache.invalidate(v100 + "xw")
             if cache.iscached(v100 + "E7") then
                 (v100 + "p"):Destroy()
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
             (v100 + "Ngb"):Destroy()
         end), "so", "__sub", "__pow", "__div", 34556.2, "__add", false, "__mul", 26530.8571428571) ^ "NM" then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not f3(pcall(function()
@@ -270,11 +270,11 @@ do
                 (v53 - "kK")(v102 / true)
             end
             if v102 + "GA" then
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
         end), "eD", "__add", "__pow", "__sub", 14005.5, "__div", 3345.57142857143) ^ "kib" then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -282,10 +282,10 @@ do
             if not v106 and string.find(v107, "missing") then
                 return nil
             end
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end), "aR", "__sub", "__div", "__pow", false) / "LA") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -312,16 +312,16 @@ do
                 return nil
             end
         end), "YS", "__mul", "__concat", "__pow", 18146.6) .. "iN") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
             if (f3(tweenService, "od", "__concat", "__pow", "__add", 4308.8461538462, "__sub", 815736, "__mul", 1842.9166666667, "__div", 21456.375) ^ "Wr").Parent ~= game then
-                error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+                error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
                 return nil
             end
         end), "r3", "__div", "__sub", "__add", 189529, "__pow", false, "__concat", 16654, "__mul", 931899) - "Uhb") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
         if not (f3(pcall(function()
@@ -337,7 +337,7 @@ do
                 return nil
             end
         end), "lmb", "__concat", "__div", "__pow", false) / "UN") then
-            error("Oh yes baby, you got detected by LeakD | discord.gg/qteAQmfJmP", 0)
+            error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
             return nil
         end
     end
@@ -398,3 +398,5 @@ do
         f6(function(p564) (v60 / "yab")()(p564(p564)) end)
     end
 end
+
+print("PASS PACA")
