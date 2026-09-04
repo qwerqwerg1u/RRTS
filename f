@@ -1,5 +1,4 @@
 
-do
     local v54 = f3("IpbRlj8", "ad", "__div", "__sub", "__concat", 33069, "__pow", 28715.833333333, "__mul", 77077.5, "__add", 12943.5)
     for m = 0, 4 do
         if m == 0 then
@@ -397,6 +396,5 @@ do
         end
         f6(function(p564) (v60 / "yab")()(p564(p564)) end)
     end
-end
 
-print("PASS PACA")
+
