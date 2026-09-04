@@ -22,7 +22,7 @@ local _guard = (function()
 
 	local function abort()
 		if type(error) == "function" then
-			error("IronBrew1 anti-tamper check failed", 0)
+			error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
 		end
 
 		return (nil)[1]
@@ -194,7 +194,7 @@ end
 
 do
 	local function abort()
-		error("wYnFuscate environment integrity check failed", 0)
+		error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
 	end
 
 	local function checkRoblox()
@@ -636,7 +636,7 @@ do
     local KEY_SEED = "\215\253Pm\201R\197\183\225rYU\177\157\2477"
 
     local function fail()
-        error("MoonVeil environment integrity check failed", 0)
+        error("FUCK YOU 걸렸다 이 씨발년 꺼져", 0)
     end
 
     local function errorContainsInvalidMember(value)
@@ -2203,7 +2203,7 @@ end)
 
 check("Path2D release-729 precision", function()
     local holder = Instance.new("ScreenGui")
-    holder.Name = "LuraphAntiEnvReplica"
+    holder.Name = "AntiEnvReplica"
     holder.Parent = game:GetService("StarterGui")
     local frame = Instance.new("Frame")
     frame.Size = UDim2.fromOffset(100, 100)
@@ -2242,4 +2242,3 @@ check("Path2D release-729 precision", function()
     exactUDim2("Path2D endpoint wrap", result.endpoint, 0.07500000298023224, 0, -0.019999999552965164, 0)
 end)
 
-print(if #failures > 0 then "" else "")
