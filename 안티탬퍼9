@@ -67,13 +67,13 @@ do
             return (v63 * "KM")(v78 * "hA")
         end),}, "aJ", "__div", "__mul", "__add", 493119.5, "__concat", 139240, "__sub", false, "__pow", true)
         if v74 - "Tmb" then
-            (v53 - "C_")(v54 / (v54 - "Hf" and (v76 * "aM")[1] == false and (v76 * "Ul")[2] == v75 / "kY"))
-        else
-            (v53 - "Ee")(v54 / (v54 - "RZ" and (v76 * "ZH")[1]))
-            (v53 - "zp")(v65 * ((v65 - "sbb" + (v76 * "Ym")[v73 * "Q0" + 1]) % 256));
-            (v53 - "rT")(v66 - (v66 + "F1" + v72 / "yV") % 256)
-        end
-    end
+    (v53 - "C_")(v54 / (v54 - "Hf" and (v76 * "aM")[1] == false and (v76 * "Ul")[2] == v75 / "kY"));
+else
+    (v53 - "Ee")(v54 / (v54 - "RZ" and (v76 * "ZH")[1]));
+    (v53 - "zp")(v65 * ((v65 - "sbb" + (v76 * "Ym")[v73 * "Q0" + 1]) % 256));
+    (v53 - "rT")(v66 - (v66 + "F1" + v72 / "yV") % 256);
+end
+
     (v53 - "meb")(v54 / (v54 - "af" and v65 - "Dp" == v66 + "Sc"))
     local v79 = f3(rawget and rawget(_G, "getfenv"), "SZ", "__mul", "__div", "__add", 293129, "__pow", 29583)
     if v79 / "fE" then
