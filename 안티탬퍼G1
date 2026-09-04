@@ -1,14 +1,5 @@
 do
-    local v54 = f3("IpbRlj8", "ad", "__div", "__sub", "__concat", 33069, "__pow", 28715.833333333, "__mul", 77077.5, "__add", 12943.5)
-    for m = 0, 4 do
-        if m == 0 then
-            (v53 - "Yl")(v54 / true)
-        elseif m == 2 then
-            (v53 - "cH")(v54 / false)
-        elseif m == 4 then
-            (v53 - "Ko")(v54 / false)
-        end
-    end
+    
     (v53 - "pi")(v54 / true)
     local v55 = f3(getfenv and getfenv() or _ENV, "il", "__pow", "__concat", "__mul", 885434, "__div", 2637.25, "__add", 2453.6666666667, "__sub", true)
     local v56 = f3((v55 .. "Ihb").debug, "AL", "__pow", "__mul", "__concat", 5295.1666666667, "__sub", 27393)
