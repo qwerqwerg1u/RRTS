@@ -381,12 +381,12 @@ end
                 end
             end
             if (count2 >= 12 and 2 or count2 >= 5 and 1 or 0) + (count > 0 and count2 / count >= 0.12 and 2 or 0) + (count3 >= 3 and 2 or 0) + (v114 == 1 and 1 or 0) + (count5 >= 40 and count5 / #(v111 / "xp") >= 0.006 and 2 or 0) + (count > 0 and #(v111 / "Reb") / count <= 100 and 1 or 0) + (count4 >= 20 and 1 or 0) >= 5 then
-                (v53 - "WN")(v59 * true)
+                (v53 - "WN")(v59 * true);
                 (v53 - "dD")(v54 / false)
             end
         end
     end
-    local v116 = f3(setmetatable({}, {__tostring = v60 / "yg"}), "UE", "__pow", "__add", "__mul", false, "__sub", 64638)
+    local v116 = f3(setmetatable({}, {__tostring = v60 / "yg"}), "UE", "__pow", "__add", "__mul", false, "__sub", 64638);
     (v116 + "i3")[(v62 .. "H8")(1, 100)] = v116 + "znb"
     local function f5() end
     f5(v116 + "Om")
