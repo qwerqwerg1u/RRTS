@@ -2916,7 +2916,7 @@ end
 
 function utility()
 self.LocalPlayer =
-self.Players.LocalPlayer
+--self.Players.LocalPlayer
 
 if not self.LocalPlayer then
     return warn(
