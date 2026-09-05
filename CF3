@@ -1,15 +1,14 @@
 local utility = {
-dropkick = Instance.new("Animation"),
---Players = game("Players"),
-RunService = game("RunService"),
-UserInputService = game("UserInputService"),
-TweenService = game("TweenService"),
-Debris = game("Debris"),
-HttpService = game("HttpService"),
-StarterGui = game("StarterGui"),
-conns = {}
+    dropkick = Instance.new("Animation"),
+    Players = game:GetService("Players"),
+    RunService = game:GetService("RunService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService"),
+    Debris = game:GetService("Debris"),
+    HttpService = game:GetService("HttpService"),
+    StarterGui = game:GetService("StarterGui"),
+    conns = {}
 }
-
 utility.dropkick.AnimationId = "rbxassetid://133566007754001"
 
 task.spawn(function()
