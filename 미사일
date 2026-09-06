@@ -1,0 +1,201 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInput = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local missileModel = nil
+local primaryPart = nil
+local isFlying = false
+local SPEED = 200
+
+local alignOrientation = nil
+local linearVelocity = nil
+local attachment = nil
+local camPart = nil
+
+if getgenv().FTAP_Gui then getgenv().FTAP_Gui:Destroy() end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "FTAP_Gui"
+gui.ResetOnSpawn = false
+gui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+getgenv().FTAP_Gui = gui
+
+local btn = Instance.new("TextButton")
+btn.Size = UDim2.new(0, 180, 0, 65)
+btn.Position = UDim2.new(0.65, 0, 0.35, 0)
+btn.BackgroundColor3 = Color3.fromRGB(240, 40, 40)
+btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+btn.Font = Enum.Font.SourceSansBold
+btn.Text = "미사일조종"
+btn.TextScaled = true
+btn.Active = true
+btn.Parent = gui
+
+Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
+
+local borderStroke = Instance.new("UIStroke", btn)
+borderStroke.Color = Color3.fromRGB(255, 255, 255)
+borderStroke.Thickness = 2.5
+borderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+local textStroke = Instance.new("UIStroke", btn)
+textStroke.Color = Color3.fromRGB(0, 0, 0)
+textStroke.Thickness = 2.5
+textStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+local textPadding = Instance.new("UIPadding", btn)
+textPadding.PaddingLeft = UDim.new(0, 8)
+textPadding.PaddingRight = UDim.new(0, 8)
+textPadding.PaddingTop = UDim.new(0, 6)
+textPadding.PaddingBottom = UDim.new(0, 6)
+
+local textSizeConstraint = Instance.new("UITextSizeConstraint", btn)
+textSizeConstraint.MinTextSize = 14
+textSizeConstraint.MaxTextSize = 22
+
+local dragging, dragStart, startPos
+btn.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = btn.Position
+    end
+end)
+
+UserInput.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        local delta = input.Position - dragStart
+        btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+UserInput.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+local function stopMissile()
+    if not isFlying then return end
+    isFlying = false
+    
+    if primaryPart and primaryPart:IsDescendantOf(workspace) then
+        local exp = Instance.new("Explosion")
+        exp.Position = primaryPart.Position
+        exp.BlastRadius = 20
+        exp.Parent = workspace
+    end
+
+    if linearVelocity then linearVelocity:Destroy() end
+    if alignOrientation then alignOrientation:Destroy() end
+    if attachment then attachment:Destroy() end
+    if camPart then camPart:Destroy() end
+    
+    if missileModel and missileModel:IsDescendantOf(workspace) then
+        missileModel:Destroy()
+    elseif primaryPart and primaryPart:IsDescendantOf(workspace) then
+        primaryPart:Destroy()
+    end
+    
+    missileModel = nil
+    primaryPart = nil
+    camPart = nil
+    
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        Camera.CameraSubject = LocalPlayer.Character.Humanoid
+    end
+    
+    btn.Text = "미사일 조종"
+    btn.BackgroundColor3 = Color3.fromRGB(240, 40, 40)
+end
+
+RunService.Stepped:Connect(function()
+    if not isFlying or not primaryPart or not primaryPart:IsDescendantOf(workspace) then
+        if isFlying then stopMissile() end
+        return
+    end
+
+    pcall(function()
+        primaryPart:SetNetworkOwner(LocalPlayer)
+    end)
+
+    local camCF = Camera.CFrame
+    if alignOrientation and linearVelocity then
+        alignOrientation.CFrame = camCF
+        linearVelocity.VectorVelocity = camCF.LookVector * SPEED
+    end
+end)
+
+local function startMissile(part)
+    primaryPart = part
+    
+    attachment = Instance.new("Attachment")
+    attachment.Parent = primaryPart
+
+    alignOrientation = Instance.new("AlignOrientation")
+    alignOrientation.Mode = Enum.OrientationAlignmentMode.OneAttachment
+    alignOrientation.Attachment0 = attachment
+    alignOrientation.MaxTorque = 1000000
+    alignOrientation.Responsiveness = 200
+    alignOrientation.CFrame = Camera.CFrame
+    alignOrientation.Parent = primaryPart
+
+    linearVelocity = Instance.new("LinearVelocity")
+    linearVelocity.MaxForce = 1000000
+    linearVelocity.Attachment0 = attachment
+    linearVelocity.VectorVelocity = Camera.CFrame.LookVector * SPEED
+    linearVelocity.Parent = primaryPart
+
+    camPart = Instance.new("Part")
+    camPart.Name = "MissileCameraFocus"
+    camPart.Size = Vector3.new(1, 1, 1)
+    camPart.Transparency = 1
+    camPart.CanCollide = false
+    camPart.Massless = true
+    camPart.CFrame = primaryPart.CFrame * CFrame.new(0, primaryPart.Size.Y / 2 + 7, 0)
+    camPart.Parent = primaryPart
+
+    local weld = Instance.new("WeldConstraint")
+    weld.Part0 = primaryPart
+    weld.Part1 = camPart
+    weld.Parent = camPart
+
+    isFlying = true
+    Camera.CameraSubject = camPart
+    btn.Text = "미사일폭파"
+    btn.BackgroundColor3 = Color3.fromRGB(40, 200, 40)
+
+    primaryPart.Touched:Connect(function(hitPart)
+        if isFlying and hitPart and not hitPart:IsDescendantOf(missileModel or primaryPart) and hitPart ~= LocalPlayer.Character then
+            stopMissile()
+        end
+    end)
+end
+
+btn.Activated:Connect(function()
+    if isFlying then
+        stopMissile()
+    else
+        local ray = Camera:ViewportPointToRay(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+        local params = RaycastParams.new()
+        if LocalPlayer.Character then params.FilterDescendantsInstances = {LocalPlayer.Character} end
+        
+        local hit = workspace:Raycast(ray.Origin, ray.Direction * 500, params)
+        if hit and hit.Instance and not hit.Instance.Anchored then
+            local obj = hit.Instance
+            local model = obj:FindFirstAncestorOfClass("Model")
+            
+            missileModel = model
+            local targetPart = (model and model.PrimaryPart) or obj
+            
+            startMissile(targetPart)
+        else
+            btn.Text = "미사일에 에임을 둬주세요"
+            task.delay(1.2, function() if not isFlying then btn.Text = "미사일 조종" end end)
+        end
+    end
+end)
