@@ -316,7 +316,6 @@ function getChar()
     return plr.Character or plr.CharacterAdded:Wait()
 end
 
-writefile('yo.mp3', game:HttpGet('https://raw.githubusercontent.com/yesawwwwwwd/Ftapian/main/yo.mp3'))
 
 sound = Instance.new('Sound')
 sound.SoundId = getcustomasset('yo.mp3')
@@ -359,8 +358,7 @@ end)
 game:GetService('Debris'):AddItem(sound, lifeTime)
 
 function witheringheights()
-    writefile('WHATHAVEYOUDONE.mp3', game:HttpGet('https://raw.githubusercontent.com/yesawwwwwwd/-WitherStormTrack/main/WHATHAVEYOUDONE.mp3'))
-
+    
     object = game:GetObjects('rbxassetid://10973669978')[1]
     object.Parent = game.Workspace
 
