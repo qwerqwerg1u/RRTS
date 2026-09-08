@@ -47,7 +47,7 @@ end)
 task.delay(0.15, function()
     local ok, res = pcall(function()
         return 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/qwerqwerg1u/RRTS/main/파카 TOP"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/qwerqwerg1u/RRTS/main/알파 TOP"))()
 
 end)
     if not ok then
