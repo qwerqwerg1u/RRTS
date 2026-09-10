@@ -3276,7 +3276,7 @@ runService.RenderStepped:Connect(function()
         fovCircle.Visible = getgenv().Settings.FovCircle
         fovCircle.ZIndex = 1
     end
-    nearestPlayerInfo = findNearestPlayer(getgenv().Settings.Fov)
+    --nearestPlayerInfo = findNearestPlayer(getgenv().Settings.Fov)
 end)
 local function calculateDirectionalVector(startPosition, targetPosition, distanceMultiplier)
     return (targetPosition - startPosition).Unit * distanceMultiplier
