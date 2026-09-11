@@ -952,8 +952,8 @@ MainL:CreateToggle({
         if humanoid and humanoid:GetState() ~= Enum.HumanoidStateType.Jumping then
             humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
         end
-    end
-end)
+    end)
+
 
 do
 
