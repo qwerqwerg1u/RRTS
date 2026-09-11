@@ -1712,6 +1712,8 @@ function loopPlayerF3()
     end)
 end
  
+local ListTab = Window:MakeTab({Name = "List", Icon = "rbxassetid://3572491301", PremiumOnly = false})              
+local LoopTab = Window:MakeTab({Name = "Loop", Icon = "rbxassetid://6023426923", PremiumOnly = false})   
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
