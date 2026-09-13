@@ -1043,7 +1043,7 @@ SkipOL = false
 OLTPValue = Vector3.new(0, 20, 0)
 
 
-Function loopPlayerBlobF4()
+function loopPlayerBlobF4()
     UpdateCurrentBlobman()
 
     local runningTasks = {}
