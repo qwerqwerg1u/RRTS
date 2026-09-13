@@ -2112,7 +2112,7 @@ LoopTab:AddToggle({
             end
 
             if Value then 
-                instantLagTask = task.spawn(function()
+           end     instantLagTask = task.spawn(function()
                     local plr = LocalPlayer
                     local RS = ReplicatedStorage
                     local SpawnRemote = RS:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction")
@@ -2677,3 +2677,4 @@ local player = Players.LocalPlayer
 player.CameraMode = Enum.CameraMode.Classic
 player.CameraMinZoomDistance = 0.5
 player.CameraMaxZoomDistance = 9999999999999999
+end
