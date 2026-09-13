@@ -2032,7 +2032,7 @@ LoopTab:AddToggle({
 })
 
 
-do
+
 
     local ToyList = {
         ["Coconut"] = "FoodCoconut",
@@ -2677,4 +2677,3 @@ local player = Players.LocalPlayer
 player.CameraMode = Enum.CameraMode.Classic
 player.CameraMinZoomDistance = 0.5
 player.CameraMaxZoomDistance = 9999999999999999
-emd
