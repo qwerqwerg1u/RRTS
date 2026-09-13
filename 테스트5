@@ -2031,130 +2031,92 @@ LoopTab:AddToggle({
     end
 })
 
-local itemTranslation = {
-    ["Banana"] = "FoodBanana",
-    ["Bread"] = "FoodBread",
-    ["Broccoli"] = "FoodBroccoli",
-    ["Cake"] = "FoodCakePink",
-    ["Coconut"] = "FoodCoconut",
-    ["Fried egg"] = "FoodDippyEgg",
-    ["Donut"] = "FoodDonut",
-    ["French frie"] = "FoodFrenchFries",
-    ["Hot dog"] = "FoodHotdog",
-    ["Meat skewers"] = "FoodMeatStick",
-    ["mushroom"] = "FoodMushroomPoison",
-    ["Cheese Pizza"] = "FoodPizzaCheese",
-    ["Pepperoni Pizza"] = "FoodPizzaPepperoni",
-    ["Coke"] = "FoodSodaCan",
-    ["trumpet"] = "InstrumentBrassBugle",
-    ["trumpet2"] = "InstrumentBrassTrumpet",
-    ["Bongo drum"] = "InstrumentDrumBongos",
-    ["snare drum"] = "InstrumentDrumSnare",
-    ["Acoustic guitar"] = "InstrumentGuitarAcoustic",
-    ["Benzo"] = "InstrumentGuitarBanjo",
-    ["Lyre"] = "InstrumentGuitarLyre",
-    ["Ukulelele"] = "InstrumentGuitarUkulele",
-    ["Violin"] = "InstrumentGuitarViolin",
-    ["Electronic piano"] = "InstrumentPianoKeyboard",
-    ["Melodica"] = "InstrumentPianoMelodica",
-    ["Mike"] = "InstrumentVoiceMicrophone",
-    ["Ocarina"] = "InstrumentWoodwindOcarina",
-    ["Saxophone"] = "InstrumentWoodwindSaxophone",
-    ["Vuvuzela"] = "InstrumentBrassVuvuzela"
-}
 
-function AntiDeathF(itemName)
-    if activeConnection then
-        activeConnection:Disconnect()
-        activeConnection = nil
+do
+
+    local ToyList = {
+        ["Coconut"] = "FoodCoconut",
+        ["Banana"] = "FoodBanana",
+        ["Fries"] = "FoodFrenchFries",
+        ["MeatStick"] = "FoodMeatStick",
+        ["Poop"] = "PoopPile",
+        ["Donut"] = "FoodDonut",
+        ["Cake"] = "FoodCakePink",
+        ["Burger"] = "FoodHamburger",
+        ["Pizza"] = "FoodPizzaCheese",
+        ["Hotdog"] = "FoodHotdog",
+        ["Mushroom"] = "FoodMushroomPoison",
+        ["Banjo"] = "InstrumentGuitarBanjo",
+        ["Violin"] = "InstrumentGuitarViolin",
+        ["Ukulele"] = "InstrumentGuitarUkulele",
+        ["Sax"] = "InstrumentWoodwindSaxophone",
+        ["Vuvuzela"] = "InstrumentBrassVuvuzela",
+        ["Bongos"] = "InstrumentDrumBongos",
+        ["Mic"] = "InstrumentVoiceMicrophone",
+        ["Pepperoni"] = "FoodPizzaPepperoni",
+        ["Piano"] = "InstrumentPianoMelodica",
+        ["Bread"] = "FoodBread",
+        ["Egg"] = "FoodDippyEgg",
+        ["Mayo"] = "FoodMayonnaise",
+        ["WhiteMug"] = "CupMugWhite",
+        ["Ocarina"] = "InstrumentWoodwindOcarina",
+        ["SparklePoop"] = "PoopPileSparkle",
+        ["BrownMug"] = "CupMugBrown",
+        ["Trumpet"] = "InstrumentBrassTrumpet",
+        ["Snare"] = "InstrumentDrumSnare",
+        ["Lyre"] = "InstrumentGuitarLyre",
+    }
+
+    local DropdownValues = {}
+    for shortName, _ in pairs(ToyList) do
+        table.insert(DropdownValues, shortName)
+    end
+    table.sort(DropdownValues)
+
+    local SelectedToy = ToyList["Burger"]
+    local instantLagActive = false
+    local instantLagTask = nil
+
+    function fixEndGrab()
+        pcall(function()
+            local grabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+            local existing = grabEvents:FindFirstChild("EndGrabEarly")
+            if existing then existing:Destroy() end
+            local s = Instance.new("RemoteEvent")
+            s.Name = "EndGrabEarly"
+            s.Parent = grabEvents
+            s.OnClientEvent:Connect(function() end)
+        end)
     end
 
-    activeConnection = rs2.Heartbeat:Connect(function()
-        if not AntiDeathT then
-            if activeConnection then
-                activeConnection:Disconnect()
-                activeConnection = nil
+    fixEndGrab()
+
+    antiTab:AddDropdown({
+        Name = "Select Input Lag Toy",
+        Items = DropdownValues,
+        Default = "Burger",
+        Callback = function(Value)
+            SelectedToy = ToyList[Value]
+        end
+    })
+
+    antiTab:AddToggle({
+        Name = "Anti Input Lag",
+        Default = false,
+        Callback = function(Value)
+            instantLagActive = Value
+
+            if instantLagTask then
+                task.cancel(instantLagTask)
+                instantLagTask = nil
             end
-            return
-        end
 
-        local Character = plr.Character
-        if not Character then return end
-
-        local donut = inv:FindFirstChild(itemName)
-
-        if not donut then
-            pcall(function()
-                rs.MenuToys.SpawnToyRemoteFunction:InvokeServer(itemName, CFrame.new(0,0,0), Vector3.new(0,0,0))
-            end)
-            return
-        end
-
-        if not donut:FindFirstChild("HoldPart") then return end
-
-        local HoldItemRemoteFunction = donut.HoldPart:FindFirstChild("HoldItemRemoteFunction")
-        local DropItemRemoteFunction = donut.HoldPart:FindFirstChild("DropItemRemoteFunction")
-
-        if HoldItemRemoteFunction and DropItemRemoteFunction then
-            HoldItemRemoteFunction:InvokeServer(donut, Character)
-            DropItemRemoteFunction:InvokeServer(donut, CFrame.new(999999, 999999, 999999), Vector3.new(999999, 999999, 999999))
-        end
-    end)
-end
-
-RunService = game:GetService("RunService")
-Camera = workspace.CurrentCamera
-
-local currentSelectedOption = "FoodBanana"
-
-antiTab:AddToggle({
-    Name = "Anti input <font color='rgb(255,0,0)'>[NWO]</font>  <font color='rgb(0,0,255)'>[Final]</font>",
-    
-    save = true,
-    Flag = "AntiDeathToggiwleFlag",
-    Callback = function(Value)
-        AntiDeathT = Value
-        if AntiDeathT then
-            task.spawn(function()
-                AntiDeathF(currentSelectedOption)
-            end)
-        else
-            if activeConnection then
-                activeConnection:Disconnect()
-                activeConnection = nil
-            end
-        end
-    end,
-})
-
-antiTab:AddDropdown({
-    Name = "Select Item",
-    Options = {
-        "Banana", "Bread", "Broccoli", "Pink Cake", "Coconut", "Soft Boiled Egg", "Donut", 
-        "French Fries", "Hot Dog", "Ukulele", "Meat Skewer", "Poison Mushroom", "Cheese Pizza", 
-        "Pepperoni Pizza", "Can of Soda", "Bugle", "Trumpet", "Bongo Drum", "Snare Drum", 
-        "Acoustic Guitar", "Banjo", "Lyre", "Violin", "Electric Piano", "Melodica", 
-        "Microphone", "Ocarina", "Saxophone", "Vuvuzela"
-    },
-
-    Default = "Banana", 
-    save = true,
-    Flag = "ItemDropdwiownFlag",
-    Callback = function(Option)
-        local rawSelection = type(Option) == "table" and Option[1] or Option
-        if type(rawSelection) == "string" then
-            local englishName = itemTranslation[rawSelection]
-            if englishName then
-                currentSelectedOption = englishName
-                if AntiDeathT then
-                    task.spawn(function()
-                        AntiDeathF(englishName)
-                    end)
-                end
-            end
-        end
-    end,
-})
+            if Value then
+                instantLagTask = task.spawn(function()
+                    local plr = LocalPlayer
+                    local RS = ReplicatedStorage
+                    local SpawnRemote = RS:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction")
+                    l
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
