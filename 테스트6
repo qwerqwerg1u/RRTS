@@ -2111,7 +2111,7 @@ do
                 instantLagTask = nil
             end
 
-            if Value then end
+            if Value then 
                 instantLagTask = task.spawn(function()
                     local plr = LocalPlayer
                     local RS = ReplicatedStorage
@@ -2677,3 +2677,4 @@ local player = Players.LocalPlayer
 player.CameraMode = Enum.CameraMode.Classic
 player.CameraMinZoomDistance = 0.5
 player.CameraMaxZoomDistance = 9999999999999999
+emd
