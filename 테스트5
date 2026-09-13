@@ -541,7 +541,7 @@ end
 end
 
 local Window = OrionLib:MakeWindow({
-        Name = "셋오너",
+        Name = "보조",
         HidePremium = false,
         SaveConfig = true,
         ConfigFolder = "임시",
@@ -1280,21 +1280,21 @@ function loopPlayerBlobF4()
 
                     if not isRidingNow and not OwnerKickMODED then
                         if not charHUM.Sit and not OnlyOwner then 
-                            for _ = 1, 2.5 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
+                            for _ = 1, 2 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
                         end
                         if charHUM.Sit and not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                         if player.IsHeld then 
-                            for _ = 1, 2.5 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
+                            for _ = 1, 2 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
                         end
                         if charHUM.Sit and not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                     end
                     if not isRidingNow and OwnerKickMODED then
-                        for _ = 1, 2.5 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
+                        for _ = 1, 2 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
                         if not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                         if SitMODED then charHUM.Sit = true end
                     end
                     if isRidingNow then
-                        for _ = 1, 2.5 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
+                        for _ = 1, 2 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
                         if not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                         if SitMODED then  charHUM.Sit = true end
                     end
