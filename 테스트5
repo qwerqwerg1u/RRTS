@@ -2032,7 +2032,50 @@ LoopTab:AddToggle({
 })
 
 
+LoopTab:AddSection({
+    Name = "No Blob"
+})
+LoopTab:AddToggle({
+    Name = "Loop kill   <font color='rgb(0,255,0)'>[Grab]</font>",
+    Default = false,
+    --Flag = "21",
+    Callback = function(Value)
+        loopPlayerT = Value
+        if loopPlayerT then
+            table.clear(playersInLoop2V)
+            for i, e in ipairs(playersInLoop1V) do
+                local nameOnly = e:match("^(.-) %(") or e
+                table.insert(playersInLoop2V, nameOnly)
+            end
+            loopPlayerF()
+        else
+            loopPlayerT = false
+            table.clear(playersInLoop2V)
+        end
+    end
+})
 
+
+
+LoopTab:AddToggle({
+    Name = "Loop kick   <font color='rgb(0,255,0)'>[Grab]</font>",
+    Default = false,
+    --Flag = "21",
+    Callback = function(Value)
+        loopPlayerT2 = Value
+        if loopPlayerT2 then
+            table.clear(playersInLoop2V)
+            for i, e in ipairs(playersInLoop1V) do
+                local nameOnly = e:match("^(.-) %(") or e
+                table.insert(playersInLoop2V, nameOnly)
+            end
+            loopPlayerF2()
+        else
+            loopPlayerT2 = false
+            table.clear(playersInLoop2V)
+        end
+    end
+})
 
     
 
