@@ -2527,7 +2527,7 @@ antiTab:AddToggle({
                 local isHeld = plr:WaitForChild("IsHeld", 10)
                 if not isHeld then warn("Anti Ownership 2: IsHeld not found") return end
                 local struggleEvent = ReplicatedStorage:WaitForChild("CharacterEvents"):WaitForChild("Struggle")
-If not isMonitoring then break end
+                if not isMonitoring then break end
         if obj.Name == "HoldPart" and obj.Parent then
             ProcessItem(obj.Parent)
         end
