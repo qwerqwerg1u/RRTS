@@ -2527,6 +2527,341 @@ antiTab:AddToggle({
                 local isHeld = plr:WaitForChild("IsHeld", 10)
                 if not isHeld then warn("Anti Ownership 2: IsHeld not found") return end
                 local struggleEvent = ReplicatedStorage:WaitForChild("CharacterEvents"):WaitForChild("Struggle")
+If not isMonitoring then break end
+        if obj.Name == "HoldPart" and obj.Parent then
+            ProcessItem(obj.Parent)
+        end
+    end
+end
+
+antiTab:AddToggle({
+    Name = "eat Food",
+    CurrentValue = false,
+    Flag = "AntiNetworkBreak",
+    Callback = function(Value)
+        isMonitoring = Value
+
+        if descendantConnection then
+            descendantConnection:Disconnect()
+            descendantConnection = nil
+        end
+
+        if not isMonitoring then
+            table.clear(processedItems)
+            return
+        end
+
+        task.spawn(ScanAndProcess)
+
+        descendantConnection = Workspace.DescendantAdded:Connect(function(obj)
+            if not isMonitoring then return end
+            if obj.Name == "HoldPart" then
+                task.defer(function()
+                    if obj.Parent and isMonitoring then
+                        ProcessItem(obj.Parent)
+                    end
+                end)
+            end
+        end)
+    end
+})
+
+antiTab:AddToggle({
+	Name = "Phantom Anti Grab ",
+	Default = false,
+    Flag = "ehsiwiqkw9202",
+	Callback = function(Value)
+		antiGrabV2Active = Value
+		
+		if Value then
+			antiGrabV2Task = task.spawn(function()
+				hkAGSt = nil
+				hkAGModel = nil
+				hkPlot = nil
+				
+				while antiGrabV2Active do
+					pcall(function()
+						plr = game:GetService("Players").LocalPlayer
+						
+						for _, home in pairs(workspace.Plots:GetChildren()) do
+							for _, person in pairs(home.PlotSign.ThisPlotsOwners:GetChildren()) do
+								if person.Value == plr.Name then
+									hkPlot = home.Name
+								end
+							end
+							for _, person in pairs(home.PlotSign:GetChildren()) do
+								if person.Name == "Sign" then
+									if person.Screen.SurfaceGui.Frame.Visible and person.Screen.SurfaceGui.Frame.PlayerDisplayName.Text == plr.DisplayName then
+										hkPlot = home.Name
+									end
+								end
+							end
+						end
+						
+						hkAGModel = workspace[plr.Name .. "SpawnedInToys"]:FindFirstChild("InstrumentWoodwindOcarina")
+							or (hkPlot and workspace.PlotItems[hkPlot]:FindFirstChild("InstrumentWoodwindOcarina"))
+
+						if hkAGModel then
+							if plr.Character then
+								for _, prt in pairs(plr.Character:GetChildren()) do
+									if prt:FindFirstChild("PartOwner") and prt.PartOwner.Value ~= "" then
+										if hkAGModel:FindFirstChild("HoldPart") and hkAGModel.HoldPart:FindFirstChild("HoldItemRemoteFunction") then
+											task.spawn(function()
+												hkAGModel.HoldPart.HoldItemRemoteFunction:InvokeServer(hkAGModel, plr.Character)
+											end)
+											game.ReplicatedStorage.MenuToys.DestroyToy:FireServer(hkAGModel)
+											if plr.Character:FindFirstChild("Humanoid") then
+												plr.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+												plr.Character.Humanoid.AutoRotate = true
+											end
+											prt.PartOwner.Value = ""
+											if plr.Character.Humanoid.Sit then
+												plr.Character.Humanoid.Sit = false
+											end
+										end
+									end
+								end
+							end
+						else
+							if plr.Character and plr:FindFirstChild("CanSpawnToy") and plr.CanSpawnToy.Value and not hkAGSt then
+								hkAGSt = tick()
+								task.spawn(function()
+									game.ReplicatedStorage.MenuToys.SpawnToyRemoteFunction:InvokeServer(
+										"InstrumentWoodwindOcarina",
+										CFrame.new(1e5, 1e5, 1e5),
+										Vector3.new(0, 0, 0)
+									)
+								end)
+							elseif hkAGSt and tick() - hkAGSt > 1 and not workspace[plr.Name .. "SpawnedInToys"]:FindFirstChild("InstrumentWoodwindOcarina") then
+								hkAGSt = nil
+							end
+
+							grabbed = false
+							if plr.Character then
+								for _, prt in pairs(plr.Character:GetChildren()) do
+									if prt:FindFirstChild("PartOwner") and prt.PartOwner.Value ~= "" then
+										grabbed = true
+									end
+								end
+							end
+
+							if grabbed then
+								game.ReplicatedStorage.CharacterEvents.Struggle:FireServer(plr)
+								if plr.Character and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("HumanoidRootPart") then
+									game.ReplicatedStorage.CharacterEvents.RagdollRemote:FireServer(plr.Character.HumanoidRootPart, 0.00000000001)
+									for _, track in ipairs(plr.Character.Humanoid:GetPlayingAnimationTracks()) do
+										if track.Animation.AnimationId == "rbxassetid://7047322890" then track:Stop() end
+									end
+								end
+							end
+						end
+
+						if plr.Character and plr.Character:FindFirstChild("Humanoid") and antiGrabV2Active then
+							for _, track in ipairs(plr.Character.Humanoid:GetPlayingAnimationTracks()) do
+								if track.Animation.AnimationId == "rbxassetid://7047322890" then track:Stop() end
+							end
+						end
+					end)
+					task.wait()
+				end
+			end)
+		else
+			if antiGrabV2Task then
+				task.cancel(antiGrabV2Task)
+				antiGrabV2Task = nil
+			end
+		end
+	end    
+})
+
+antiTab:AddToggle({
+	Name = "Anti Ownership F1",
+	Default = false,
+    Flag = "ehioqkdbfe",
+	Callback = function(Value)
+		antiOwnershipActive = Value
+		if Value then
+			antiOwnershipTask = task.spawn(function()
+				Struggle = game:GetService("ReplicatedStorage").CharacterEvents.Struggle
+				while antiOwnershipActive do
+					pcall(function()
+						character = LocalPlayer.Character
+						if character and character:FindFirstChild("Head") then
+							head = character.Head
+							if head:FindFirstChild("PartOwner") then
+								Struggle:FireServer(LocalPlayer)
+								for _, part in pairs(character:GetChildren()) do
+									if part:IsA("BasePart") then
+										part.Anchored = true
+									end
+								end
+								isHeld = LocalPlayer:FindFirstChild("IsHeld")
+								while isHeld and isHeld.Value and antiOwnershipActive do
+									task.wait()
+								end
+								for _, part in pairs(character:GetChildren()) do
+									if part:IsA("BasePart") then
+										part.Anchored = false
+									end
+								end
+							end
+						end
+					end)
+					task.wait(0.1)
+				end
+			end)
+		else
+			if antiOwnershipTask then
+				task.cancel(antiOwnershipTask)
+				antiOwnershipTask = nil
+			end
+			char = LocalPlayer.Character
+			if char then
+				for _, part in pairs(char:GetChildren()) do
+					if part:IsA("BasePart") then
+						part.Anchored = false
+					end
+				end
+			end
+		end
+	end    
+})
+
+antiTab:AddToggle({
+    Name = "Anti massless <font color='rgb(0,0,255)'>[massless]</font>",
+    save = true,
+    Flag = "17yeydywi",
+    Callback = function(Value)
+        masslessT = Value
+        masslessF()
+    end
+})
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local connections = {}
+
+local function monitorHRP(character)
+    local hrp = character:WaitForChild("HumanoidRootPart", 5)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    
+    if hrp and humanoid then
+        if hrp.Massless and not humanoid.Sit then
+            hrp.Massless = false
+        end
+        
+        local c1 = hrp:GetPropertyChangedSignal("Massless"):Connect(function()
+            if hrp.Massless and not humanoid.Sit then
+                hrp.Massless = false
+            end
+        end)
+        
+        local c2 = humanoid:GetPropertyChangedSignal("Sit"):Connect(function()
+            if not humanoid.Sit and hrp.Massless then
+                hrp.Massless = false
+            end
+        end)
+        
+        table.insert(connections, c1)
+        table.insert(connections, c2)
+    end
+end
+
+antiTab:AddToggle({
+    Name = "loop TP",
+    save = true,
+    Flag = "afcihwh",
+    Callback = function(Value)
+        AntiGrabTP_ActiveV2 = Value
+
+        local originalPosition = nil
+
+        if Value then
+            local char = plr.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                originalPosition = char.HumanoidRootPart.Position
+            end
+        end
+
+        task.spawn(function()
+            while AntiGrabTP_ActiveV2 and task.wait() do
+                local char = plr.Character
+                if not char then continue end
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if not hrp then continue end
+
+                local randomX = math.random(-1000, 1000)
+                local randomY = math.random(0, 1000)
+                local randomZ = math.random(-1000, 1000)
+
+                hrp.CFrame = CFrame.new(randomX, randomY, randomZ)
+            end
+
+            if not AntiGrabTP_ActiveV2 and originalPosition then
+                local char = plr.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    char.HumanoidRootPart.CFrame = CFrame.new(originalPosition)
+                end
+            end
+        end)
+    end
+})
+
+antiTab:AddToggle({
+    Name = "Anti ownership spam B1",
+    Default = false,
+    Flag = "AntiOwnersh2hhip",
+    Callback = function(v)
+        Settings.Anti.AntiOwnership = v
+        if v then
+            State.antiOwnershipConns["task"] = task.spawn(function()
+                pcall(function()
+                    local Struggle = ReplicatedStorage:WaitForChild("CharacterEvents"):WaitForChild("Struggle")
+                    while Settings.Anti.AntiOwnership do
+                        local character = LocalPlayer.Character
+                        if character and character:FindFirstChild("Head") then
+                            local head = character.Head
+                            if head:FindFirstChild("PartOwner") then
+                                pcall(function() Struggle:FireServer(LocalPlayer) end)
+                                for _, part in pairs(character:GetChildren()) do
+                                    if part:IsA("BasePart") then pcall(function() part.Anchored = true end) end
+                                end
+                                local isHeld = LocalPlayer:FindFirstChild("IsHeld")
+                                while isHeld and isHeld.Value and Settings.Anti.AntiOwnership do task.wait(0.05) end
+                                for _, part in pairs(character:GetChildren()) do
+                                    if part:IsA("BasePart") then pcall(function() part.Anchored = false end) end
+                                end
+                            end
+                        end
+                        task.wait(0.1)
+                    end
+                end)
+            end)
+        else
+            if State.antiOwnershipConns["task"] then task.cancel(State.antiOwnershipConns["task"]) State.antiOwnershipConns["task"] = nil end
+            local char = LocalPlayer.Character
+            if char then
+                for _, part in pairs(char:GetChildren()) do
+                    if part:IsA("BasePart") then pcall(function() part.Anchored = false end) end
+                end
+            end
+        end
+    end
+})
+
+antiTab:AddToggle({
+    Name = "Anti ownership spam V1",
+    Default = false,
+    Flag = "AntiOwnewyrship2",
+    Callback = function(v)
+        Settings.Anti.AntiOwnership2 = v
+        if v then
+            pcall(function()
+                local plr = LocalPlayer
+                local isHeld = plr:WaitForChild("IsHeld", 10)
+                if not isHeld then warn("Anti Ownership 2: IsHeld not found") return end
+                local struggleEvent = ReplicatedStorage:WaitForChild("CharacterEvents"):WaitForChild("Struggle")
                 local savedCFrame = nil
                 State.antiOwnershipConns["AntiOwn2Conn"] = isHeld.Changed:Connect(function(heldState)
                     local char = plr.Character
@@ -2583,12 +2918,6 @@ antiTab:AddToggle({
         end
     end
 })
-
-
-
-
-
---local isHeldLoop = nil
 
 antiTab:AddToggle({
     Name = "Anti ownership spamV2    <font color='rgb(0,0,255)'>[Ownership]</font>",
@@ -2677,4 +3006,3 @@ local player = Players.LocalPlayer
 player.CameraMode = Enum.CameraMode.Classic
 player.CameraMinZoomDistance = 0.5
 player.CameraMaxZoomDistance = 9999999999999999
-end)
