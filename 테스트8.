@@ -822,7 +822,7 @@ local SpawnToyRF = menuToysFolder:WaitForChild("SpawnToyRemoteFunction")
 local DeleteToyRE = menuToysFolder:WaitForChild("DestroyToy")
 local playerEventsFolder = ReplicatedStorage:WaitForChild("PlayerEvents")
 local StickyPartEvent = playerEventsFolder:WaitForChild("StickyPartEvent")
-local isHeldValue = LocalPlayer:WaitForChild("IsHeld")
+--local isHeldValue = LocalPlayer:WaitForChild("IsHeld")
 
 local apagarfogo = nil
 pcall(function()
