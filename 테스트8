@@ -822,10 +822,7 @@ local SpawnToyRF = menuToysFolder:WaitForChild("SpawnToyRemoteFunction")
 local DeleteToyRE = menuToysFolder:WaitForChild("DestroyToy")
 local playerEventsFolder = ReplicatedStorage:WaitForChild("PlayerEvents")
 local StickyPartEvent = playerEventsFolder:WaitForChild("StickyPartEvent")
---local isHeldValue = LocalPlayer:WaitForChild("IsHeld")
---local playerScriptsFolder = LocalPlayer:WaitForChild("PlayerScripts")
---local anticreatelinelocalscript = playerScriptsFolder:WaitForChild("CharacterAndBeamMove", 5)
---local spawnedInToysFolder = Workspace:WaitForChild(LocalPlayer.Name .. "SpawnedInToys", 5)
+local isHeldValue = LocalPlayer:WaitForChild("IsHeld")
 
 local apagarfogo = nil
 pcall(function()
@@ -984,7 +981,7 @@ end
 
 function TP(target)
     local TCHAR = target.Character
-    --local THRP = TCHAR:FindFirstChild("HumanoidRootPart")
+    local THRP = TCHAR:FindFirstChild("HumanoidRootPart")
     local THRP = TCHAR:FindFirstChild("Torso")
 
     local localChar = plr.Character
@@ -1033,6 +1030,14 @@ local function safeGetCharacterParts(player)
     local head = char:FindFirstChild("Head")
     return char, hrp, head
 end
+local RunService = game:GetService("RunService")
+local destroyCount = 0
+OwnerKickMODED = false
+SitMODED = false
+OnlyOwner = false
+SkipOL = false
+OLTPValue = Vector3.new(0, 30, 0)
+
 
 function loopPlayerBlobF4()
     UpdateCurrentBlobman()
