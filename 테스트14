@@ -2372,7 +2372,7 @@ antiTab:AddToggle({
             ProcessItem(obj.Parent)
         end
     end
-
+end
 
 antiTab:AddToggle({
     Name = "eat Food",
