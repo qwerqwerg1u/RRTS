@@ -1034,15 +1034,6 @@ local function safeGetCharacterParts(player)
     return char, hrp, head
 end
 
-local RunService = game:GetService("RunService")
-local destroyCount = 0
-OwnerKickMODED = false
-SitMODED = false
-OnlyOwner = false
-SkipOL = false
-OLTPValue = Vector3.new(0, 20, 0)
-
-
 function loopPlayerBlobF4()
     UpdateCurrentBlobman()
 
@@ -1168,21 +1159,10 @@ function loopPlayerBlobF4()
                     tpRunning = false
                     shouldContinue = true
 
-                    local myCharRefresh = plr.Character
-                    local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                    if myHRPRefresh and originPositions[player] then
-                        myHRPRefresh.CFrame = originPositions[player]
-                    end
-                    break
-                end
-
-                if (myHRP.Position - charHRP.Position).Magnitude > 25 then
-                    tpRunning = false
-                    shouldContinue = true
-                    local myCharRefresh = plr.Character
-                    local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                    if myHRPRefresh and originPositions[player] then
-                        myHRPRefresh.CFrame = originPositions[player]
+                    local myChar = plr.Character
+                    local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                    if myHRP and originPositions[player] then
+                        myHRP.CFrame = originPositions[player]
                     end
                     break
                 end
@@ -1194,7 +1174,7 @@ function loopPlayerBlobF4()
                 if not ownerTag or (ownerTag:IsA("StringValue") and ownerTag.Value ~= plr.Name) then
                     for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(head, head.CFrame) end
                     if charHRP then 
-                        for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, charHRP.CFrame) end
+                        for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, charHRP.CFrame) end 
                     end
                 end
 
@@ -1249,7 +1229,7 @@ function loopPlayerBlobF4()
                                 local sticky = item.StickyPart
                                 local weld = sticky:FindFirstChild("StickyWeld")
                                 if weld and weld:IsA("WeldConstraint") and weld.Part1 and weld.Part1:IsDescendantOf(character) then
-                                    rs.GrabEvents.SetNetworkOwner:FireServer(sticky, sticky.CFrame)
+                                    for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(sticky, sticky.CFrame) end
                                     sticky.CFrame = CFrame.new(0,9999,0)
                                 end
                             end
@@ -1281,16 +1261,12 @@ function loopPlayerBlobF4()
                             charTOR.Anchored = false
                         end
 
-                        local myCharRefresh = plr.Character
-                        local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                        if myHRPRefresh and originPositions[player] then
-                            myHRPRefresh.CFrame = originPositions[player]
+                        local myChar = plr.Character
+                        local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                        if myHRP and originPositions[player] then
+                            myHRP.CFrame = originPositions[player]
                         end
                         
-                        return
-                    end
-
-                    if (myHRP.Position - charHRP.Position).Magnitude > 25 then
                         return
                     end
 
@@ -1302,11 +1278,11 @@ function loopPlayerBlobF4()
 
                     if not isRidingNow and not OwnerKickMODED then
                         if not charHUM.Sit and not OnlyOwner then 
-                            for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
+                            for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
                         end
                         if charHUM.Sit and not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                         if player.IsHeld then 
-                            for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end 
+                            for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
                         end
                         if charHUM.Sit and not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                     end
@@ -1316,7 +1292,7 @@ function loopPlayerBlobF4()
                         if SitMODED then charHUM.Sit = true end
                     end
                     if isRidingNow then
-                        rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position))
+                        for _ = 1, 3 do rs.GrabEvents.SetNetworkOwner:FireServer(charHRP, CFrame.lookAt(myHRP.Position, charHRP.Position)) end
                         if not OnlyOwner then rs.GrabEvents.DestroyGrabLine:FireServer(charHRP) end
                         if SitMODED then  charHUM.Sit = true end
                     end
@@ -1371,39 +1347,13 @@ function loopPlayerBlobF4()
                             charTOR.Anchored = false
                         end
 
-                        local myCharRefresh = plr.Character
-                        local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                        if myHRPRefresh and originPositions[player] then
-                            myHRPRefresh.CFrame = originPositions[player]
+                        local myChar = plr.Character
+                        local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                        if myHRP and originPositions[player] then
+                            myHRP.CFrame = originPositions[player]
                         end
                         
                         break 
-                    end
-
-                    if (myHRP.Position - charHRP.Position).Magnitude > 25 then
-                        if independentHoldConnections[player] then
-                            independentHoldConnections[player]:Disconnect()
-                            independentHoldConnections[player] = nil
-                        end
-                        if anchorToggleTasks[player] then
-                            task.cancel(anchorToggleTasks[player])
-                            anchorToggleTasks[player] = nil
-                        end
-                        if ownerTags[player] then
-                            ownerTags[player]:Destroy()
-                            ownerTags[player] = nil
-                        end
-                        if charTOR then
-                            charTOR.Anchored = false
-                        end
-
-                        local myCharRefresh = plr.Character
-                        local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                        if myHRPRefresh and originPositions[player] then
-                            myHRPRefresh.CFrame = originPositions[player]
-                        end
-                        
-                        break
                     end
 
                     local currentSeat = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") and plr.Character:FindFirstChildOfClass("Humanoid").SeatPart
@@ -1436,10 +1386,10 @@ function loopPlayerBlobF4()
                     charTOR.Anchored = false
                 end
 
-                local myCharRefresh = plr.Character
-                local myHRPRefresh = myCharRefresh and myCharRefresh:FindFirstChild("HumanoidRootPart")
-                if myHRPRefresh and originPositions[player] then
-                    myHRPRefresh.CFrame = originPositions[player]
+                local myChar = plr.Character
+                local myHRP = myChar and myChar:FindFirstChild("HumanoidRootPart")
+                if myHRP and originPositions[player] then
+                    myHRP.CFrame = originPositions[player]
                 end
             end
 
@@ -1571,6 +1521,7 @@ function loopPlayerBlobF4()
         destroyCounts = {}
     end)
 end
+
 
 function loopPlayerF() 
     UpdateCurrentBlobman()
