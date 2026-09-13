@@ -2361,19 +2361,32 @@ antiTab:AddToggle({
     Flag = "AntiOwnewyrship2",
     Callback = function(v)
         Settings.Anti.AntiOwnership2 = v
+
         if v then
             pcall(function()
                 local plr = LocalPlayer
                 local isHeld = plr:WaitForChild("IsHeld", 10)
-                if not isHeld then warn("Anti Ownership 2: IsHeld not found") return end
-                local struggleEvent = ReplicatedStorage:WaitForChild("CharacterEvents"):WaitForChild("Struggle")
-                if not isMonitoring then break end
-        if obj.Name == "HoldPart" and obj.Parent then
-            ProcessItem(obj.Parent)
+
+                if not isHeld then
+                    warn("Anti Ownership 2: IsHeld not found")
+                    return
+                end
+
+                local struggleEvent = ReplicatedStorage
+                    :WaitForChild("CharacterEvents")
+                    :WaitForChild("Struggle")
+
+                if not isMonitoring then
+                    return
+                end
+
+                if obj.Name == "HoldPart" and obj.Parent then
+                    ProcessItem(obj.Parent)
+                end
+            end)
         end
     end
-end
-
+})
 antiTab:AddToggle({
     Name = "eat Food",
     CurrentValue = false,
