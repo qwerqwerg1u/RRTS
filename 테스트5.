@@ -2116,7 +2116,7 @@ do
                     local plr = LocalPlayer
                     local RS = ReplicatedStorage
                     local SpawnRemote = RS:WaitForChild("MenuToys"):WaitForChild("SpawnToyRemoteFunction")
-                    l
+                    
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
