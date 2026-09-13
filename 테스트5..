@@ -2111,7 +2111,7 @@ do
                 instantLagTask = nil
             end
 
-            if Value then
+            if Value then end
                 instantLagTask = task.spawn(function()
                     local plr = LocalPlayer
                     local RS = ReplicatedStorage
