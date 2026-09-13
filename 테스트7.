@@ -984,7 +984,7 @@ end
 
 function TP(target)
     local TCHAR = target.Character
-    local THRP = TCHAR:FindFirstChild("HumanoidRootPart")
+    --local THRP = TCHAR:FindFirstChild("HumanoidRootPart")
     local THRP = TCHAR:FindFirstChild("Torso")
 
     local localChar = plr.Character
