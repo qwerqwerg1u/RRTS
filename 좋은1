@@ -1,3 +1,10 @@
+rs = game:GetService("ReplicatedStorage")
+rs2 = game:GetService("RunService")
+G = rs.GrabEvents
+G:WaitForChild("EndGrabEarly"):Destroy()
+Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
+
+
 local function isBlocked(url)
     if type(url) ~= 'string' then return false end
     local lowerUrl = string.lower(url)
