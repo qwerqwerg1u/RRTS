@@ -345,7 +345,7 @@ local function f6()
             namecall = v25.__namecall
             setreadonly(v25, false)
 
-            v25.__namecall = newcclosure(function(p5, .. .)
+            v25__namecall = newcclosure(function(p5, .. .)
                 local v26 = getnamecallmethod()
                 local v27 = .. .
 
