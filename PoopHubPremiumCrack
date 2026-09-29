@@ -1,0 +1,54 @@
+print("Crack by Alpha")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+if localPlayer then
+    pcall(function()
+        hookfunction(localPlayer.Kick, function(self, ...)
+            
+            return
+        end)
+    end)
+end
+local oldHttpGet
+oldHttpGet = hookfunction(game.HttpGet, function(self, url, ...)
+    if type(url) == "string" and string.find(url, "api.dcus.pro") then
+        print("[Bypass] 가로챈 URL:", url)
+        
+               if string.find(url, "loader.lua") then
+            print("")
+            return [[
+                print("Bypass Loader")
+              
+                return function()
+                    
+                end
+            ]]
+        end
+        
+        
+        if string.find(url, "headermodule") then
+            
+            return [[
+                local HeaderModule = {}
+                HeaderModule.__index = HeaderModule
+                HeaderModule.Config = {}
+                function HeaderModule:Check()
+                    
+                    return true, "Bypassed successfully"
+                end
+                return HeaderModule
+            ]]
+        end
+    end
+    return oldHttpGet(self, url, ...)
+end)
+
+
+
+
+getgenv().dcus_key = "DCUS-B1808D-21Z8L8"
+local success, err = pcall(function()
+    loadstring(game:HttpGet("https://api.dcus.pro/ph/premium/loader.lua"))()
+end)
+
+ 
