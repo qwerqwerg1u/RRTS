@@ -1,3 +1,5 @@
+--This file is the result of the Luraph V15 decompilation.
+
 local connection = game.ChildAdded:Connect(function(child)
 end)
 connection:Disconnect()
@@ -247,7 +249,7 @@ end
 _G.prop_toJSON = function(arg11, arg12)
 end
 _G.prop_setMode = function(arg13, arg14)
-end
+ end
 _G.prop_setAnimSpeed = function(arg15, arg16)
 end
 _G.prop_setHeadOn = function(arg17, arg18)
