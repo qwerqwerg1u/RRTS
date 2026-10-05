@@ -1,4 +1,34 @@
 print("Crack by Alpha")
+local HttpService = game:GetService("HttpService")
+
+local function getCountryCode()
+    local requestFunc = syn and syn.request or http_request or request or (http and http.request)
+    if requestFunc then
+        local success, res = pcall(requestFunc, {Url = "https://ipapi.co/country/", Method = "GET"})
+        if success and res and res.Body then
+            return res.Body:gsub("%s+", "")
+        end
+    end
+    local success, res = pcall(function()
+        return game:HttpGet("https://ipapi.co/country/")
+    end)
+    if success and res then
+        return res:gsub("%s+", "")
+    end
+    return "UNKNOWN"
+end
+
+local isKR = getCountryCode() == "KR"
+
+if isKR then
+    print("참고로 이거 적혀있는키는예시키입니다. 제키가아니며 키값을 바꾸거나 없어도 작동됩니다")
+    print("이스크립트는 바이패스형식입니다 똥허브의 형식은 키를확인하면 무조건 true를 싸지르는 형식이기때문에 그 화이트리스트시스템을 차단후 변조하여 true로 내뿜는 형식입니다.")
+    print("무튼 저키는 제키가아니고 그냥 똥허브  디스코드서버의 예시키이기때문에 저걸로 뭐탈취생각한다던지 그런 생각은 하지마세요🥀")
+else
+    print("Note: The key provided here is just an example. It isn't my personal key, and the script will function regardless of whether you modify or remove it.")
+    print("This script is a bypass. DdongHub's validation unconditionally returns true upon checking, so this intercepts their whitelist check and forges a valid true response.")
+    print("Either way, that key isn't mine—it's simply an example key from their Discord server, so don't even think about trying to hijack anything with it. 🥀")
+end
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 if localPlayer then
