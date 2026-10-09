@@ -1908,6 +1908,57 @@ end)
 				end
 				return ParagraphFunction
 			end
+			function ElementFunction:AddProfileParagraph(Config)
+				Config = Config or {}
+				Config.Title = Config.Title or "Title"
+				Config.Content = Config.Content or "Content"
+				Config.Image = Config.Image or ""
+
+				local ParagraphFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
+					Size = UDim2.new(1, 0, 0, 70),
+					BackgroundTransparency = 0.7,
+					Parent = ItemParent
+				}), {
+					SetProps(MakeElement("Image", "", 0), {
+						Name = "Avatar",
+						Size = UDim2.new(0, 60, 0, 60),
+						Position = UDim2.new(0, 5, 0, 5),
+						BackgroundTransparency = 1,
+						Image = Config.Image
+					}),
+					AddThemeObject(SetProps(MakeElement("Label", Config.Title, 13), {
+						Size = UDim2.new(1, -70, 0, 14),
+						Position = UDim2.new(0, 70, 0, 15),
+						Font = Enum.Font.Code,
+						Name = "Title",
+						TextXAlignment = Enum.TextXAlignment.Left
+					}), "Text"),
+					AddThemeObject(SetProps(MakeElement("Label", "", 12), {
+						Size = UDim2.new(1, -70, 0, 0),
+						Position = UDim2.new(0, 70, 0, 35),
+						Font = Enum.Font.Code,
+						Name = "Content",
+						TextWrapped = true,
+						TextXAlignment = Enum.TextXAlignment.Left
+					}), "TextDark"),
+					AddThemeObject(MakeElement("Stroke"), "Stroke")
+				}), "Second")
+
+				AddConnection(ParagraphFrame.Content:GetPropertyChangedSignal("Text"), function()
+					local textHeight = ParagraphFrame.Content.TextBounds.Y
+					ParagraphFrame.Content.Size = UDim2.new(1, -70, 0, textHeight)
+					local newHeight = math.max(70, textHeight + 45)
+					ParagraphFrame.Size = UDim2.new(1, 0, 0, newHeight)
+				end)
+
+				ParagraphFrame.Content.Text = Config.Content
+
+				local ParagraphFunction = {}
+				function ParagraphFunction:Set(ToChange)
+					ParagraphFrame.Content.Text = ToChange
+				end
+				return ParagraphFunction
+			end
 
 			function ElementFunction:AddButton(ButtonConfig)
 				ButtonConfig = ButtonConfig or {}
